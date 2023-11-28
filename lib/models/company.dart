@@ -1,0 +1,45 @@
+class Company {
+  final String name,
+      companyID,
+      driveType,
+      timeLeft,
+      imageURL,
+      startedAtTime,
+      details,
+      eligibilityCriteria,
+      dateOfDrive,
+      jobProfile,
+      location,
+      package,
+      bond;
+  final List<String> roles, process;
+  final int numRegistrations;
+
+  Company(
+      {required this.name,
+      required this.companyID,
+      required this.driveType,
+      required this.timeLeft,
+      required this.imageURL,
+      required this.startedAtTime,
+      required this.details,
+      required this.eligibilityCriteria,
+      required this.dateOfDrive,
+      required this.jobProfile,
+      required this.location,
+      required this.package,
+      required this.bond,
+      required this.roles,
+      required this.process,
+      required this.numRegistrations});
+
+  @override
+  bool operator ==(Object other) {
+    return other is Company &&
+        other.runtimeType == runtimeType &&
+        other.companyID == companyID;
+  }
+
+  @override
+  int get hashCode => companyID.hashCode;
+}
