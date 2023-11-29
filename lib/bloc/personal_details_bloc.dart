@@ -10,7 +10,6 @@ class PersonalDetailsBloc
   PersonalDetailsBloc()
       : super(const InitialState(isLoading: false, authError: null)) {
     on<FetchPersonalDetailsEvent>(_fetchPersonalDetails);
-
     on<UpdatePersonalDetailsEvent>(_updatePersonalDetails);
   }
   Future<FutureOr<void>> _fetchPersonalDetails(FetchPersonalDetailsEvent event,

@@ -66,25 +66,28 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                       .titleLarge
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Icon(
-                        state is FetchingContactDetailsState
-                            ? Icons.timer
-                            : Icons.check_circle,
-                        color: state is FetchingContactDetailsState
-                            ? Colors.amber
-                            : Theme.of(context).colorScheme.secondary,
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(
+                          state is FetchingContactDetailsState
+                              ? Icons.timer
+                              : Icons.check_circle,
+                          color: state is FetchingContactDetailsState
+                              ? Colors.amber
+                              : Theme.of(context).colorScheme.secondary,
+                        ),
                       ),
-                    ),
-                    Text(state is FetchedContactDetailsState
-                        ? "Details Up-to-Date"
-                        : "Fetching Details")
-                  ],
+                      Text(state is FetchedContactDetailsState
+                          ? "Details Up-to-Date"
+                          : "Fetching Details")
+                    ],
+                  ),
                 ),
                 children: [
                   Padding(
