@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import './screens/drives_screen.dart';
 import './themes/theme_manager.dart';
+import './bloc/contact_details_bloc.dart';
+import './bloc/personal_details_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,15 +31,24 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeManager.getTheme(
-          themeMode: _themeMode,
-          primaryColor:
-              Colors.deepPurple, // const Color.fromARGB(255, 241, 84, 105),
-          secondaryColor: const Color.fromARGB(255, 49, 49, 49),
-          tertiaryColor: Colors.black),
-      home: const DrivesScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ContactDetailsBloc>(
+          create: (context) => ContactDetailsBloc(),
+        ),
+        BlocProvider<PersonalDetailsBloc>(
+          create: (context) => PersonalDetailsBloc(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'The College Placement Application',
+        theme: ThemeManager.getTheme(
+            themeMode: _themeMode,
+            primaryColor: Colors.deepPurple,
+            secondaryColor: Colors.blueAccent,
+            tertiaryColor: Colors.black),
+        home: const DrivesScreen(),
+      ),
     );
   }
 }

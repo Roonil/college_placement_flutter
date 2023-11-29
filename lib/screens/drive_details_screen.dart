@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../bloc/contact_details_bloc.dart';
+import '../bloc/contact_details_events.dart';
+import '../bloc/personal_details_bloc.dart';
+import '../bloc/personal_details_events.dart';
 import '../main.dart';
 import '../models/company.dart';
 import '../widgets/drive_tile_name.dart';
@@ -59,11 +64,17 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: ElevatedButton(
-                          onPressed: () =>
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const StudentDetailsScreen(),
-                              )),
+                          onPressed: () {
+                            BlocProvider.of<ContactDetailsBloc>(context).add(
+                                const FetchContactDetailsEvent(studentID: "1"));
+                            BlocProvider.of<PersonalDetailsBloc>(context).add(
+                                const FetchPersonalDetailsEvent(
+                                    studentID: "1"));
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const StudentDetailsScreen(),
+                            ));
+                          },
                           child: const Text("Apply")),
                     ),
                     Padding(

@@ -12,6 +12,10 @@ class StudentDetailsScreen extends StatefulWidget {
 
 class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
   final TextEditingController dateOfBirthController = TextEditingController();
+  final ExpansionTileController personalDetailsExpansionTileController =
+      ExpansionTileController();
+  final ExpansionTileController contactDetailsExpansionTileController =
+      ExpansionTileController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +32,14 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
             children: [
               Flexible(
                   child: PersonalDetailsCard(
-                      dateOfBirthController: dateOfBirthController)),
-              const Flexible(
+                expansionTileController: personalDetailsExpansionTileController,
+              )),
+              Flexible(
                   child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: ContactDetailsCard(),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ContactDetailsCard(
+                    expansionTileController:
+                        contactDetailsExpansionTileController),
               )),
             ],
           ),

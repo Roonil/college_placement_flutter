@@ -50,7 +50,7 @@ class ThemeManager {
           iconTheme: darkThemeData.iconTheme),
       chipTheme: baseThemeData.chipTheme.copyWith(
           side: const BorderSide(color: Colors.transparent),
-          backgroundColor: primaryColor,
+          backgroundColor: secondaryColor,
           labelStyle: const TextStyle(color: Colors.white),
           iconTheme: darkThemeData.iconTheme
               .copyWith(color: secondaryColor, size: 18)),
