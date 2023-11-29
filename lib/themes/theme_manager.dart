@@ -72,9 +72,6 @@ class ThemeManager {
                 surfaceTintColor: Colors.transparent),
             elevatedButtonTheme: darkTheme.elevatedButtonTheme,
             chipTheme: darkTheme.chipTheme,
-            inputDecorationTheme: lightThemeData.inputDecorationTheme.copyWith(
-              isDense: true,
-            ),
             textTheme: GoogleFonts.poppinsTextTheme(lightThemeData.textTheme))
         : darkTheme.copyWith(
             textTheme: GoogleFonts.poppinsTextTheme(darkThemeData.textTheme));

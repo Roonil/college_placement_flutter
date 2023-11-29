@@ -21,7 +21,10 @@ class PersonalDetailsCard extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text(
                 "Personal Details",
-                style: Theme.of(context).textTheme.displaySmall,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
@@ -39,6 +42,7 @@ class PersonalDetailsCard extends StatelessWidget {
                           ? "Please enter a valid First Name"
                           : null,
                       decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(8),
                           label: const Text("First Name"),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20))),
@@ -56,6 +60,7 @@ class PersonalDetailsCard extends StatelessWidget {
                           ? "Please enter a valid Last Name"
                           : null,
                       decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(8),
                           label: const Text("Last Name"),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20))),
@@ -81,6 +86,7 @@ class PersonalDetailsCard extends StatelessWidget {
                   }
                 },
                 decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(8),
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.calendar_month),
                       onPressed: () async {
@@ -129,6 +135,7 @@ class PersonalDetailsCard extends StatelessWidget {
                     ? "Please enter a valid Nationality"
                     : null,
                 decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(8),
                     label: const Text("Nationality"),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20))),

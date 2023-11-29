@@ -18,7 +18,10 @@ class ContactDetailsCard extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text(
                 "Contact Details",
-                style: Theme.of(context).textTheme.displaySmall,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
@@ -29,6 +32,7 @@ class ContactDetailsCard extends StatelessWidget {
                     ? null
                     : "Please enter a valid Email Address",
                 decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(8),
                     label: const Text("Email Address"),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20))),
@@ -52,6 +56,7 @@ class ContactDetailsCard extends StatelessWidget {
                     ? "Please enter a valid Phone Number"
                     : null,
                 decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(8),
                     label: const Text("Phone Number"),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20))),
@@ -72,6 +77,7 @@ class ContactDetailsCard extends StatelessWidget {
                               ? "Please enter a valid Address"
                               : null,
                       decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(8),
                           label: const Text("Address Line 1"),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20))),
@@ -84,6 +90,7 @@ class ContactDetailsCard extends StatelessWidget {
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.streetAddress,
                       decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(8),
                           label: const Text("Address Line 2"),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20))),
@@ -107,6 +114,7 @@ class ContactDetailsCard extends StatelessWidget {
                           ? "Please enter a valid State"
                           : null,
                       decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(8),
                           label: const Text("State"),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20))),
@@ -123,6 +131,7 @@ class ContactDetailsCard extends StatelessWidget {
                           ? "Please enter a valid City Name"
                           : null,
                       decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(8),
                           label: const Text("City"),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20))),
@@ -155,6 +164,7 @@ class ContactDetailsCard extends StatelessWidget {
                           ? "Please enter a valid Pin Code"
                           : null,
                       decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(8),
                           label: const Text("Pin Code"),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20))),
@@ -171,6 +181,7 @@ class ContactDetailsCard extends StatelessWidget {
                           ? "Please enter a valid Country Name"
                           : null,
                       decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(8),
                           label: const Text("Country"),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20))),
