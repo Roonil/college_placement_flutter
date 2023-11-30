@@ -256,7 +256,6 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                                                 maxLength}) =>
                                             null,
                                         textInputAction: TextInputAction.next,
-                                        keyboardType: TextInputType.number,
                                         validator: (pinCode) => pinCode ==
                                                     null ||
                                                 pinCode.length != 6 ||

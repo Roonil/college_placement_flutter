@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 import './screens/drives_screen.dart';
 import './themes/theme_manager.dart';
@@ -31,6 +34,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      FlutterDisplayMode.setHighRefreshRate();
+    }
     return MultiBlocProvider(
       providers: [
         BlocProvider<ContactDetailsBloc>(
