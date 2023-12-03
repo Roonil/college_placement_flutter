@@ -25,7 +25,6 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.company.name),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           IconButton(
               onPressed: () =>

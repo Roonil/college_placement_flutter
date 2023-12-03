@@ -11,6 +11,7 @@ class ThemeManager {
     final ThemeData baseThemeData = ThemeData(
       chipTheme: ChipThemeData(
         side: const BorderSide(color: Colors.transparent),
+        padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -45,15 +46,15 @@ class ThemeManager {
       scaffoldBackgroundColor: const Color.fromRGBO(20, 22, 34, 1),
       colorScheme: darkThemeData.colorScheme,
       appBarTheme: AppBarTheme(
-          backgroundColor: darkThemeData.colorScheme.tertiary,
-          foregroundColor: darkThemeData.colorScheme.onSecondaryContainer,
-          iconTheme: darkThemeData.iconTheme),
+          backgroundColor: primaryColor, foregroundColor: Colors.white),
       chipTheme: baseThemeData.chipTheme.copyWith(
-          side: const BorderSide(color: Colors.transparent),
-          backgroundColor: secondaryColor,
-          labelStyle: const TextStyle(color: Colors.white),
-          iconTheme: darkThemeData.iconTheme
-              .copyWith(color: secondaryColor, size: 18)),
+        side: const BorderSide(color: Colors.transparent),
+        backgroundColor: secondaryColor,
+        selectedShadowColor: primaryColor,
+        labelStyle: const TextStyle(color: Colors.white),
+        iconTheme:
+            darkThemeData.iconTheme.copyWith(color: secondaryColor, size: 18),
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: darkThemeData.primaryColor,
@@ -64,12 +65,13 @@ class ThemeManager {
 
     final ThemeData theme = themeMode == ThemeMode.light
         ? lightThemeData.copyWith(
+            appBarTheme:
+                darkTheme.appBarTheme.copyWith(foregroundColor: Colors.white),
             colorScheme: lightThemeData.colorScheme,
             scaffoldBackgroundColor: Colors.white.withOpacity(0.95),
             cardTheme: lightThemeData.cardTheme.copyWith(
-                elevation: 5,
-                color: Colors.white,
-                surfaceTintColor: Colors.transparent),
+              elevation: 5,
+            ),
             elevatedButtonTheme: darkTheme.elevatedButtonTheme,
             chipTheme: darkTheme.chipTheme,
             textTheme: GoogleFonts.poppinsTextTheme(lightThemeData.textTheme))

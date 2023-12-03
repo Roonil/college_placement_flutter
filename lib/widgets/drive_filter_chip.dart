@@ -29,35 +29,21 @@ class _DriveFilterChipState extends State<DriveFilterChip> {
               .labelMedium
               ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
           backgroundColor: Theme.of(context).colorScheme.primary,
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          visualDensity: VisualDensity.compact,
-          onSelected: (value) => setState(() => {
-                menuController.isOpen
-                    ? menuController.close()
-                    : menuController.open(),
-                selectedEntry = i,
-                //      widget.filter.isSelected = !(widget.filter.isSelected),
-                widget.onTap(widget.filter.filterItems.keys.elementAt(i)),
-              }),
+          onSelected: (value) => {
+            selectedEntry == i
+                ? null
+                : setState(() => {
+                      selectedEntry = i,
+                      widget.onTap(widget.filter.filterItems.keys.elementAt(i)),
+                    }),
+            menuController.isOpen
+                ? menuController.close()
+                : menuController.open()
+          },
         ),
       ));
     }
-    // return FilterChip.elevated(
-    //   label: Text(widget.filter.name),
-    //   labelStyle: Theme.of(context).textTheme.labelMedium,
-    //   selected: widget.filter.isSelected,
-    //   elevation: 5,
-    //   pressElevation: 7,
-    //   onSelected: (value) => {
-    //     setState(() => {
-    //           widget.filter.isSelected = !(widget.filter.isSelected),
-    //           widget.onTap(value ? 1 : -1),
-    //         }),
-    //   },
-    //   backgroundColor: Theme.of(context).colorScheme.tertiary,
-    //   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-    //   visualDensity: VisualDensity.compact,
-    // );
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -93,12 +79,11 @@ class _DriveFilterChipState extends State<DriveFilterChip> {
                   selected: true,
                   showCheckmark: selectedEntry != null,
                   elevation: 5,
+                  padding: const EdgeInsets.all(8),
                   pressElevation: 7,
                   onSelected: (value) => {
                     controller.isOpen ? controller.close() : controller.open(),
                   },
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  visualDensity: VisualDensity.compact,
                 )),
         selectedEntry == null
             ? const SizedBox()
@@ -111,9 +96,6 @@ class _DriveFilterChipState extends State<DriveFilterChip> {
                 iconSize: 20,
                 padding: EdgeInsets.zero,
                 visualDensity: VisualDensity.compact,
-                style: IconButton.styleFrom(
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
               )
       ],
     );

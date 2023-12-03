@@ -22,7 +22,6 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Verify Details"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

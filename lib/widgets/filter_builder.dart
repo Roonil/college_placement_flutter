@@ -17,7 +17,7 @@ class FilterBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Padding> filterChips = [];
-//TODO: Add dropdown for filters, eg: Type of drive (hybrid,online,off-campus), registration type (registered, unregistered)
+
     for (Filter filter in filters) {
       filterChips.add(Padding(
         padding: const EdgeInsets.only(right: 8.0),
@@ -27,9 +27,12 @@ class FilterBuilder extends StatelessWidget {
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: filterChips,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: filterChips,
+        ),
       ),
     );
   }
