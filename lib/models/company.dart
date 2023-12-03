@@ -14,6 +14,7 @@ class Company {
       bond;
   final List<String> roles, process;
   final int numRegistrations;
+  final bool hasRegistered;
 
   Company(
       {required this.name,
@@ -31,7 +32,8 @@ class Company {
       required this.bond,
       required this.roles,
       required this.process,
-      required this.numRegistrations});
+      required this.numRegistrations,
+      required this.hasRegistered});
 
   @override
   bool operator ==(Object other) {

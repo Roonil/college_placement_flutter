@@ -23,11 +23,32 @@ class DriveTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              DriveTileName(
-                  companyID: company.companyID,
-                  companyName: company.name,
-                  driveType: company.driveType,
-                  imageURL: company.imageURL),
+              Row(
+                children: [
+                  Expanded(
+                    child: Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      runSpacing: 8,
+                      children: [
+                        DriveTileName(
+                            companyID: company.companyID,
+                            companyName: company.name,
+                            driveType: company.driveType,
+                            imageURL: company.imageURL),
+                        Chip(
+                            color: MaterialStatePropertyAll(
+                                company.hasRegistered
+                                    ? Colors.green
+                                    : Colors.red),
+                            label: Text(company.hasRegistered
+                                ? "Registered"
+                                : "Not Registered"))
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: RolesChipBuilder(

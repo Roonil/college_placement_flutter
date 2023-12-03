@@ -137,10 +137,40 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
                           ? Wrap(
                               children: [
                                 TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      //TODO: Add confirmation dialog
+                                      firstNameController.text =
+                                          previousFirstName ?? "";
+                                      lastNameController.text =
+                                          previousLastName ?? "";
+                                      dateOfBirthController.text =
+                                          previousDateOfBirth ?? "";
+                                      nationalityController.text =
+                                          previousNationality ?? "";
+                                    },
                                     child: const Text("Undo Changes")),
                                 TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      BlocProvider.of<PersonalDetailsBloc>(
+                                              context)
+                                          .add(UpdatePersonalDetailsEvent(
+                                              studentID: "1",
+                                              personalDetails: PersonalDetails(
+                                                  dateOfBirth:
+                                                      dateOfBirthController
+                                                          .text
+                                                          .trim(),
+                                                  firstName:
+                                                      firstNameController
+                                                          .text
+                                                          .trim(),
+                                                  lastName: lastNameController
+                                                      .text
+                                                      .trim(),
+                                                  nationality:
+                                                      nationalityController.text
+                                                          .trim())));
+                                    },
                                     child: const Text("Save Changes")),
                               ],
                             )
@@ -293,8 +323,9 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
                                     controller: nationalityController,
                                     onChanged: (_) => setState(() {}),
                                     onFieldSubmitted: (value) => formKey
-                                            .currentState!
-                                            .validate()
+                                                .currentState!
+                                                .validate() &&
+                                            editedText
                                         ? BlocProvider.of<PersonalDetailsBloc>(context)
                                             .add(UpdatePersonalDetailsEvent(
                                                 studentID: "1",

@@ -19,8 +19,6 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Sometimes upon switching textfields rapidly (atleast on android), the scaffold 'scales' up
-    //TODO: Changing pincode's keyboardtype to text seems to solve the issue, it used to be number before. Check for submitting the bug.
     return Scaffold(
       appBar: AppBar(
         title: const Text("Verify Details"),
@@ -43,6 +41,11 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                     expansionTileController:
                         contactDetailsExpansionTileController),
               )),
+              Flexible(
+                  child: TextButton(
+                child: const Text("Register"),
+                onPressed: () {},
+              ))
             ],
           ),
         ),

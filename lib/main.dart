@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
             themeMode: _themeMode,
             primaryColor: Colors.deepPurple,
             secondaryColor: Colors.blueAccent,
-            tertiaryColor: Colors.black),
+            tertiaryColor: const Color.fromARGB(255, 6, 184, 140)),
         home: const DrivesScreen(),
       ),
     );
