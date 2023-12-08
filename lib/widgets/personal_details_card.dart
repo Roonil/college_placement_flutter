@@ -96,7 +96,7 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
                     alignment: WrapAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
+                        padding: const EdgeInsets.only(top: 8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -136,9 +136,10 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
                               editedText
                           ? Wrap(
                               children: [
-                                TextButton(
-                                    onPressed: () {
-                                      //TODO: Add confirmation dialog
+                                IconButton(
+                                  onPressed: () {
+                                    //TODO: Add confirmation dialog
+                                    setState(() {
                                       firstNameController.text =
                                           previousFirstName ?? "";
                                       lastNameController.text =
@@ -147,31 +148,50 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
                                           previousDateOfBirth ?? "";
                                       nationalityController.text =
                                           previousNationality ?? "";
-                                    },
-                                    child: const Text("Undo Changes")),
-                                TextButton(
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.undo,
+                                    color: Colors.red,
+                                  ),
+                                  tooltip: "Undo Changes",
+                                ),
+                                IconButton(
                                     onPressed: () {
-                                      BlocProvider.of<PersonalDetailsBloc>(
-                                              context)
-                                          .add(UpdatePersonalDetailsEvent(
-                                              studentID: "1",
-                                              personalDetails: PersonalDetails(
-                                                  dateOfBirth:
-                                                      dateOfBirthController
-                                                          .text
-                                                          .trim(),
-                                                  firstName:
-                                                      firstNameController
-                                                          .text
-                                                          .trim(),
-                                                  lastName: lastNameController
-                                                      .text
-                                                      .trim(),
-                                                  nationality:
-                                                      nationalityController.text
-                                                          .trim())));
+                                      formKey.currentState!.validate() &&
+                                              editedText
+                                          ? BlocProvider
+                                                  .of<
+                                                          PersonalDetailsBloc>(
+                                                      context)
+                                              .add(UpdatePersonalDetailsEvent(
+                                                  studentID: "1",
+                                                  personalDetails: PersonalDetails(
+                                                      dateOfBirth:
+                                                          dateOfBirthController
+                                                              .text
+                                                              .trim(),
+                                                      firstName:
+                                                          firstNameController
+                                                              .text
+                                                              .trim(),
+                                                      lastName:
+                                                          lastNameController
+                                                              .text
+                                                              .trim(),
+                                                      nationality:
+                                                          nationalityController
+                                                              .text
+                                                              .trim())))
+                                          : null;
                                     },
-                                    child: const Text("Save Changes")),
+                                    tooltip: "Save Changes",
+                                    icon: Icon(
+                                      Icons.save,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary,
+                                    )),
                               ],
                             )
                           : const SizedBox()
@@ -256,7 +276,15 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
                                         return "Please enter a valid Date of Birth";
                                       }
                                       try {
-                                        DateFormat("dd/MM/yyyy").parse((date));
+                                        final DateTime currentDate =
+                                            DateFormat("dd/MM/yyyy")
+                                                .parse((date));
+                                        if (currentDate
+                                                .isBefore(DateTime(1993)) ||
+                                            currentDate
+                                                .isAfter(DateTime(2005))) {
+                                          return "Please enter a valid Date of Birth";
+                                        }
                                         return null;
                                       } catch (_) {
                                         return "Please enter a valid Date of Birth";
@@ -306,6 +334,10 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
 
                                               dateOfBirthController.text =
                                                   formattedDate;
+
+                                              if (pickedDate != currentDate) {
+                                                setState(() {});
+                                              }
                                             }
                                           },
                                         ),

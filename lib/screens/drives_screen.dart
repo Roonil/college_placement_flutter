@@ -38,8 +38,8 @@ class _DrivesScreenState extends State<DrivesScreen> {
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
               ))
         ],
-        // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
+      //TODO: Add function to mark drives (review for later-ish)
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -51,9 +51,22 @@ class _DrivesScreenState extends State<DrivesScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 8.0),
-                    child: Text("Filter: "),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, right: 8),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: () {},
+                            ),
+                            isDense: true,
+                            label: const Text("Search for Drives"),
+                            contentPadding: const EdgeInsets.all(10),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20))),
+                      ),
+                    ),
                   ),
                   //TODO: Add clear filters button
                   Expanded(

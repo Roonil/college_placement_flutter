@@ -49,10 +49,20 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: 'The College Placement Application',
         theme: ThemeManager.getTheme(
-            themeMode: _themeMode,
-            primaryColor: Colors.deepPurple,
-            secondaryColor: Colors.blueAccent,
-            tertiaryColor: const Color.fromARGB(255, 6, 184, 140)),
+                themeMode: _themeMode,
+                primaryColor: Colors.deepPurple,
+                secondaryColor: Colors.blueAccent,
+                tertiaryColor: const Color.fromARGB(255, 6, 184, 140))
+            .copyWith(
+          pageTransitionsTheme: const PageTransitionsTheme(builders: {
+            TargetPlatform.fuchsia: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
+          }),
+        ),
         home: const DrivesScreen(),
       ),
     );
