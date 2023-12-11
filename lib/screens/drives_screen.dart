@@ -4,9 +4,9 @@ import '../dummy_data/companies.dart';
 import '../dummy_data/filters.dart';
 import '../main.dart';
 import '../models/company.dart';
-import '../widgets/drive_tile.dart';
-import '../widgets/filter_builder.dart';
-import '../widgets/filter_functions.dart';
+import '../widgets/drives_screen/drive_tile.dart';
+import '../widgets/drives_screen/filter_builder.dart';
+import '../widgets/drives_screen/filter_functions.dart';
 
 class DrivesScreen extends StatefulWidget {
   const DrivesScreen({

@@ -1,8 +1,9 @@
-import '../models/company.dart';
-import '../screens/drive_details_screen.dart';
-import 'drive_tile_name.dart';
-import 'roles_chip_builder.dart';
 import 'package:flutter/material.dart';
+
+import '../../models/company.dart';
+import '../../screens/drive_details_screen.dart';
+import '../drive_tile_name.dart';
+import './roles_chip_builder.dart';
 
 class DriveTile extends StatelessWidget {
   final Company company;

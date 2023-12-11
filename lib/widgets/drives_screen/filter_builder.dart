@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../dummy_data/filter_actions.dart';
-import '../models/filter.dart';
-import 'drive_filter_chip.dart';
+import '../../dummy_data/filter_actions.dart';
+import '../../models/filter.dart';
+import './drive_filter_chip.dart';
 
 class FilterBuilder extends StatelessWidget {
   const FilterBuilder({

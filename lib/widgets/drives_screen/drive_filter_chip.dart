@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../dummy_data/filter_actions.dart';
-import '../models/filter.dart';
+import '../../dummy_data/filter_actions.dart';
+import '../../models/filter.dart';
 
 class DriveFilterChip extends StatefulWidget {
   const DriveFilterChip({super.key, required this.filter, required this.onTap});

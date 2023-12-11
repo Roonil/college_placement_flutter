@@ -1,5 +1,5 @@
-import '../dummy_data/filter_actions.dart';
-import '../models/company.dart';
+import '../../dummy_data/filter_actions.dart';
+import '../../models/company.dart';
 
 class FilterFunctions {
   static final Set<FilterType> appliedFilters = {};

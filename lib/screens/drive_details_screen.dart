@@ -8,8 +8,8 @@ import '../bloc/personal_details_events.dart';
 import '../main.dart';
 import '../models/company.dart';
 import '../widgets/drive_tile_name.dart';
-import '../widgets/job_description_table.dart';
-import 'student_details_screen.dart';
+import '../widgets/drive_details_screen/job_description_table.dart';
+import './student_details_screen.dart';
 
 class DriveDetailsScreen extends StatefulWidget {
   final Company company;

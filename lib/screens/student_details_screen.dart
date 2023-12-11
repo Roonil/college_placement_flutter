@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/contact_details_card.dart';
-import '../widgets/personal_details_card.dart';
+import '../widgets/student_details_screen/contact_details/contact_details_card.dart';
+import '../widgets/student_details_screen/personal_details/personal_details_card.dart';
 
 class StudentDetailsScreen extends StatefulWidget {
   const StudentDetailsScreen({super.key});

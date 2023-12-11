@@ -69,9 +69,7 @@ class ThemeManager {
                 darkTheme.appBarTheme.copyWith(foregroundColor: Colors.white),
             colorScheme: lightThemeData.colorScheme,
             scaffoldBackgroundColor: Colors.white.withOpacity(0.95),
-            cardTheme: lightThemeData.cardTheme.copyWith(
-              elevation: 5,
-            ),
+            cardTheme: lightThemeData.cardTheme.copyWith(elevation: 5),
             elevatedButtonTheme: darkTheme.elevatedButtonTheme,
             chipTheme: darkTheme.chipTheme,
             textTheme: GoogleFonts.poppinsTextTheme(lightThemeData.textTheme))
