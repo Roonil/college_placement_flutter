@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../bloc/personal_details_bloc.dart';
-import '../../../bloc/personal_details_events.dart';
-import '../../../bloc/personal_details_states.dart';
+import '../../../bloc/details_blocs/personal_details_bloc.dart';
+import '../../../bloc/details_blocs/personal_details_events.dart';
+import '../../../bloc/details_blocs/personal_details_states.dart';
 import '../../../models/personal_details.dart';
 import '../details_subtitle.dart';
 import './personal_details_inputs.dart';

@@ -16,24 +16,19 @@ class FilterBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Padding> filterChips = [];
-
-    for (Filter filter in filters) {
-      filterChips.add(Padding(
-        padding: const EdgeInsets.only(right: 8.0),
-        child: DriveFilterChip(filter: filter, onTap: onTap),
-      ));
-    }
-
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: Axis.vertical,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: filterChips,
-        ),
-      ),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ListView.separated(
+              shrinkWrap: true,
+              separatorBuilder: (context, index) => const Divider(),
+              itemCount: filters.length,
+              itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: DriveFilterChip(
+                        filter: filters.elementAt(index), onTap: onTap),
+                  ))),
     );
   }
 }

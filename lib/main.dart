@@ -6,8 +6,8 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 import './screens/drives_screen.dart';
 import './themes/theme_manager.dart';
-import './bloc/contact_details_bloc.dart';
-import './bloc/personal_details_bloc.dart';
+import 'bloc/details_blocs/contact_details_bloc.dart';
+import 'bloc/details_blocs/personal_details_bloc.dart';
 
 void main() {
   runApp(const MyApp());

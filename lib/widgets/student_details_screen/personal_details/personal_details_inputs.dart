@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../bloc/personal_details_bloc.dart';
-import '../../../bloc/personal_details_events.dart';
+import '../../../bloc/details_blocs/personal_details_bloc.dart';
+import '../../../bloc/details_blocs/personal_details_events.dart';
 import '../../../models/personal_details.dart';
 
 class PersonalDetailsInputs extends StatelessWidget {

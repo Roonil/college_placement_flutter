@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:flutter/material.dart';
 
-import '../models/contact_details.dart';
+import '../../models/contact_details.dart';
 
 @immutable
 abstract class ContactDetailsState {

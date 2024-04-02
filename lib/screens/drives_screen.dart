@@ -7,6 +7,7 @@ import '../models/company.dart';
 import '../widgets/drives_screen/drive_tile.dart';
 import '../widgets/drives_screen/filter_builder.dart';
 import '../widgets/drives_screen/filter_functions.dart';
+import 'settings_screen.dart';
 
 class DrivesScreen extends StatefulWidget {
   const DrivesScreen({
@@ -26,6 +27,13 @@ class _DrivesScreenState extends State<DrivesScreen> {
       appBar: AppBar(
         title: const Text("Ongoing Drives"),
         actions: [
+          IconButton(
+              onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsScreen(),
+                    ),
+                  ),
+              icon: const Icon(Icons.settings)),
           IconButton(
               onPressed: () =>
                   Theme.of(context).colorScheme.brightness == Brightness.dark
@@ -68,17 +76,42 @@ class _DrivesScreenState extends State<DrivesScreen> {
                       ),
                     ),
                   ),
-                  //TODO: Add clear filters button
-                  Expanded(
-                    child: FilterBuilder(
-                        filters: filters,
-                        onTap: (filterType) {
-                          setState(() {
-                            filteredCompanies = FilterFunctions.applyFilters(
-                                companies: companies, filterType: filterType);
-                          });
-                        }),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () => showModalBottomSheet(
+                              context: context,
+                              builder: (context) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: FilterBuilder(
+                                    filters: filters,
+                                    onTap: (filterType) {
+                                      setState(() {
+                                        filteredCompanies =
+                                            FilterFunctions.applyFilters(
+                                                companies: companies,
+                                                filterType: filterType);
+                                      });
+                                    }),
+                              ),
+                            ),
+                        icon: const Icon(
+                          Icons.filter_list_rounded,
+                        )),
                   )
+                  //TODO: Add clear filters button
+
+                  // Expanded(
+                  //   child: FilterBuilder(
+                  //       filters: filters,
+                  //       onTap: (filterType) {
+                  //         setState(() {
+                  //           filteredCompanies = FilterFunctions.applyFilters(
+                  //               companies: companies, filterType: filterType);
+                  //         });
+                  //       }),
+                  // )
                 ],
               ),
             ),

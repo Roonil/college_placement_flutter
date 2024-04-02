@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/contact_details.dart';
-import './contact_details_events.dart';
-import './contact_details_states.dart';
+import '../../models/contact_details.dart';
+import 'contact_details_events.dart';
+import 'contact_details_states.dart';
 
 class ContactDetailsBloc
     extends Bloc<ContactDetailsEvent, ContactDetailsState> {

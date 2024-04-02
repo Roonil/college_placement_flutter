@@ -2,8 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/contact_details_bloc.dart';
-import '../../../bloc/contact_details_states.dart';
+import '../../../bloc/details_blocs/contact_details_bloc.dart';
+import '../../../bloc/details_blocs/contact_details_states.dart';
 
 class ContactDetailsCard extends StatefulWidget {
   const ContactDetailsCard({super.key, required this.expansionTileController});

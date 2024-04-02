@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/filter_bloc.dart';
+import '../../bloc/filter_events.dart';
 import '../../dummy_data/filter_actions.dart';
 import '../../models/filter.dart';
 
@@ -13,90 +16,77 @@ class DriveFilterChip extends StatefulWidget {
 }
 
 class _DriveFilterChipState extends State<DriveFilterChip> {
-  int? selectedEntry;
+  FilterType? selectedEntry;
   final MenuController menuController = MenuController();
+
   @override
   Widget build(BuildContext context) {
-    final List<MenuItemButton> menuChildren = [];
-
-    for (int i = 0; i < widget.filter.filterItems.length; i++) {
-      menuChildren.add(MenuItemButton(
-        child: FilterChip.elevated(
-          elevation: 5,
-          label: Text(widget.filter.filterItems.entries.elementAt(i).value),
-          labelStyle: Theme.of(context)
-              .textTheme
-              .labelMedium
-              ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          onSelected: (value) => {
-            selectedEntry == i
-                ? null
-                : setState(() => {
-                      selectedEntry = i,
-                      widget.onTap(widget.filter.filterItems.keys.elementAt(i)),
-                    }),
-            menuController.isOpen
-                ? menuController.close()
-                : menuController.open()
-          },
-        ),
-      ));
-    }
-
-    return Row(
+    return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        MenuAnchor(
-            controller: menuController,
-            style: const MenuStyle(
-              alignment: FractionalOffset(-.05, -10),
-              backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-              surfaceTintColor: MaterialStatePropertyAll(Colors.transparent),
-              shadowColor: MaterialStatePropertyAll(Colors.transparent),
-            ),
-            menuChildren: menuChildren,
-            builder: (context, controller, child) => FilterChip.elevated(
-                  label: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(selectedEntry != null
-                          ? widget.filter.filterItems.entries
-                              .elementAt(selectedEntry ?? 0)
-                              .value
-                          : widget.filter.name),
-                      const Icon(
-                        Icons.arrow_drop_down,
-                        size: 17,
-                      )
-                    ],
-                  ),
-                  labelStyle: Theme.of(context).textTheme.labelMedium,
-                  labelPadding: const EdgeInsets.only(left: 8),
-                  selectedColor: selectedEntry == null
-                      ? null
-                      : Theme.of(context).colorScheme.tertiary,
-                  selected: true,
-                  showCheckmark: selectedEntry != null,
-                  elevation: 5,
-                  padding: const EdgeInsets.all(8),
-                  pressElevation: 7,
-                  onSelected: (value) => {
-                    controller.isOpen ? controller.close() : controller.open(),
-                  },
-                )),
-        selectedEntry == null
-            ? const SizedBox()
-            : IconButton(
-                onPressed: () => {
-                  selectedEntry = null,
-                  widget.onTap(widget.filter.clearType)
-                },
-                icon: const Icon(Icons.cancel_rounded),
-                iconSize: 20,
-                padding: EdgeInsets.zero,
-                visualDensity: VisualDensity.compact,
-              )
+        Flexible(child: Text(widget.filter.name)),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            children: [
+              Flexible(
+                child: Wrap(
+                    spacing: 8,
+                    runSpacing: 12,
+                    alignment: WrapAlignment.start,
+                    children: widget.filter.filterItems.entries
+                        .map((entry) => FilterChip(
+                              selected: selectedEntry == entry.key,
+                              padding: const EdgeInsets.all(6),
+                              side: BorderSide(
+                                  width: 0,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground
+                                      .withAlpha(120)),
+                              label: Text(entry.value),
+                              labelStyle: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.background,
+                              onSelected: (value) {
+                                setState(() {
+                                  selectedEntry == entry.key
+                                      ? {
+                                          selectedEntry = null,
+                                          widget.onTap(widget.filter.clearType),
+                                          BlocProvider.of<FilterBloc>(context)
+                                              .add(RemoveFilterEvent(
+                                                  filterType: entry.key)),
+                                        }
+                                      : {
+                                          selectedEntry != null
+                                              ? BlocProvider.of<FilterBloc>(
+                                                      context)
+                                                  .add(RemoveFilterEvent(
+                                                      filterType:
+                                                          selectedEntry!))
+                                              : null,
+                                          selectedEntry = entry.key,
+                                          widget.onTap(entry.key),
+                                          BlocProvider.of<FilterBloc>(context)
+                                              .add(ApplyFilterEvent(
+                                                  filterType: entry.key))
+                                        };
+                                });
+                              },
+                            ))
+                        .toList()),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
