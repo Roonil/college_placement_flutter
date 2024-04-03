@@ -8,11 +8,11 @@ class FilterBuilder extends StatelessWidget {
   const FilterBuilder({
     super.key,
     required this.filters,
-    required this.onTap,
+    required this.applyFilterCallBack,
   });
 
   final Set<Filter> filters;
-  final Function(FilterType) onTap;
+  final Function(FilterType) applyFilterCallBack;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,8 @@ class FilterBuilder extends StatelessWidget {
               itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: DriveFilterChip(
-                        filter: filters.elementAt(index), onTap: onTap),
+                        filter: filters.elementAt(index),
+                        applyFilterCallBack: applyFilterCallBack),
                   ))),
     );
   }

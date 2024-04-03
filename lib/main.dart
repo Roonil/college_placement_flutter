@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
-import './screens/drives_screen.dart';
 import './themes/theme_manager.dart';
 import 'bloc/details_blocs/contact_details_bloc.dart';
 import 'bloc/details_blocs/personal_details_bloc.dart';
+import 'screens/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
         title: 'The College Placement Application',
         theme: ThemeManager.getTheme(
                 themeMode: _themeMode,
-                primaryColor: Colors.deepPurple,
+                primaryColor: Colors.red.shade800,
                 secondaryColor: Colors.blueAccent,
                 tertiaryColor: const Color.fromARGB(255, 6, 184, 140))
             .copyWith(
@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
             TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
           }),
         ),
-        home: const DrivesScreen(),
+        home: const LoginScreen(),
       ),
     );
   }

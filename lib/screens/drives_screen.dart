@@ -81,12 +81,14 @@ class _DrivesScreenState extends State<DrivesScreen> {
                     child: IconButton(
                         padding: EdgeInsets.zero,
                         onPressed: () => showModalBottomSheet(
+                              useRootNavigator: true,
                               context: context,
                               builder: (context) => Padding(
                                 padding: const EdgeInsets.all(8.0),
+                                //TODO: Show filter sub-menu on side on Desktops
                                 child: FilterBuilder(
                                     filters: filters,
-                                    onTap: (filterType) {
+                                    applyFilterCallBack: (filterType) {
                                       setState(() {
                                         filteredCompanies =
                                             FilterFunctions.applyFilters(
@@ -96,8 +98,11 @@ class _DrivesScreenState extends State<DrivesScreen> {
                                     }),
                               ),
                             ),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.filter_list_rounded,
+                          color: FilterFunctions.appliedFilters.isNotEmpty
+                              ? Theme.of(context).colorScheme.tertiary
+                              : null,
                         )),
                   )
                   //TODO: Add clear filters button

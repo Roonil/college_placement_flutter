@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/filter_bloc.dart';
-import '../../bloc/filter_events.dart';
 import '../../dummy_data/filter_actions.dart';
 import '../../models/filter.dart';
+import 'filter_functions.dart';
 
 class DriveFilterChip extends StatefulWidget {
-  const DriveFilterChip({super.key, required this.filter, required this.onTap});
+  const DriveFilterChip(
+      {super.key, required this.filter, required this.applyFilterCallBack});
   final Filter filter;
-  final Function(FilterType) onTap;
+  final Function(FilterType) applyFilterCallBack;
 
   @override
   State<DriveFilterChip> createState() => _DriveFilterChipState();
 }
 
 class _DriveFilterChipState extends State<DriveFilterChip> {
-  FilterType? selectedEntry;
   final MenuController menuController = MenuController();
 
   @override
@@ -37,7 +35,8 @@ class _DriveFilterChipState extends State<DriveFilterChip> {
                     alignment: WrapAlignment.start,
                     children: widget.filter.filterItems.entries
                         .map((entry) => FilterChip(
-                              selected: selectedEntry == entry.key,
+                              selected: FilterFunctions.appliedFilters
+                                  .contains(entry.key),
                               padding: const EdgeInsets.all(6),
                               side: BorderSide(
                                   width: 0,
@@ -57,27 +56,14 @@ class _DriveFilterChipState extends State<DriveFilterChip> {
                                   Theme.of(context).colorScheme.background,
                               onSelected: (value) {
                                 setState(() {
-                                  selectedEntry == entry.key
+                                  FilterFunctions.appliedFilters
+                                          .contains(entry.key)
                                       ? {
-                                          selectedEntry = null,
-                                          widget.onTap(widget.filter.clearType),
-                                          BlocProvider.of<FilterBloc>(context)
-                                              .add(RemoveFilterEvent(
-                                                  filterType: entry.key)),
+                                          widget.applyFilterCallBack(
+                                              widget.filter.clearType),
                                         }
                                       : {
-                                          selectedEntry != null
-                                              ? BlocProvider.of<FilterBloc>(
-                                                      context)
-                                                  .add(RemoveFilterEvent(
-                                                      filterType:
-                                                          selectedEntry!))
-                                              : null,
-                                          selectedEntry = entry.key,
-                                          widget.onTap(entry.key),
-                                          BlocProvider.of<FilterBloc>(context)
-                                              .add(ApplyFilterEvent(
-                                                  filterType: entry.key))
+                                          widget.applyFilterCallBack(entry.key),
                                         };
                                 });
                               },
