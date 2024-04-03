@@ -20,6 +20,20 @@ class DrivesScreen extends StatefulWidget {
 
 class _DrivesScreenState extends State<DrivesScreen> {
   Set<Company> filteredCompanies = companies;
+  Set<Company> previouslyFilteredCompanies = companies;
+  final TextEditingController searchController = TextEditingController();
+
+  Set<Company> searchCompanies(
+      {required Set<Company> companies, required String searchString}) {
+    final Set<Company> searchedCompanies = {};
+    for (Company company in companies) {
+      if (company.name.toLowerCase().contains(searchString.toLowerCase())) {
+        searchedCompanies.add(company);
+      }
+    }
+
+    return searchedCompanies;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,10 +77,24 @@ class _DrivesScreenState extends State<DrivesScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 8.0, right: 8),
                       child: TextFormField(
+                        controller: searchController,
+                        onFieldSubmitted: (value) => setState(() {
+                          filteredCompanies = searchCompanies(
+                              companies: previouslyFilteredCompanies,
+                              searchString: value.trim().toLowerCase());
+                        }),
                         decoration: InputDecoration(
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.search),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  filteredCompanies = searchCompanies(
+                                      companies: previouslyFilteredCompanies,
+                                      searchString: searchController.text
+                                          .trim()
+                                          .toLowerCase());
+                                });
+                              },
                             ),
                             isDense: true,
                             label: const Text("Search for Drives"),
@@ -90,10 +118,17 @@ class _DrivesScreenState extends State<DrivesScreen> {
                                     filters: filters,
                                     applyFilterCallBack: (filterType) {
                                       setState(() {
-                                        filteredCompanies =
+                                        previouslyFilteredCompanies =
                                             FilterFunctions.applyFilters(
                                                 companies: companies,
                                                 filterType: filterType);
+
+                                        filteredCompanies = searchCompanies(
+                                            searchString: searchController.text
+                                                .trim()
+                                                .toLowerCase(),
+                                            companies:
+                                                previouslyFilteredCompanies);
                                       });
                                     }),
                               ),

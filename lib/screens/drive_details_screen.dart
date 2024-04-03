@@ -47,7 +47,7 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
             DriveTileName(
                 companyName: widget.company.name,
                 driveType: widget.company.driveType,
-                companyID: widget.company.companyID,
+                companyID: widget.company.driveID,
                 imageURL: widget.company.imageURL),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
