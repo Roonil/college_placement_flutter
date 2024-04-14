@@ -1,3 +1,7 @@
+import 'package:college_placement_flutter/widgets/student_details_screen/intermediate_school_details/intermediate_school_details_card.dart';
+import 'package:college_placement_flutter/widgets/student_details_screen/metric_school_details/metric_school_details_card.dart';
+
+import '../widgets/student_details_screen/undergraduate_details/undergraduate_details_card.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/student_details_screen/contact_details/contact_details_card.dart';
@@ -16,6 +20,13 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       ExpansionTileController();
   final ExpansionTileController contactDetailsExpansionTileController =
       ExpansionTileController();
+  final ExpansionTileController undergraduateDetailsExpansionTileController =
+      ExpansionTileController();
+  final ExpansionTileController metricSchoolDetailsExpansionTileController =
+      ExpansionTileController();
+  final ExpansionTileController
+      intermediateSchoolDetailsExpansionTileController =
+      ExpansionTileController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +43,21 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
               Flexible(
                   child: PersonalDetailsCard(
                 expansionTileController: personalDetailsExpansionTileController,
+              )),
+              Flexible(
+                  child: UndergraduateDetailsCard(
+                expansionTileController:
+                    undergraduateDetailsExpansionTileController,
+              )),
+              Flexible(
+                  child: MetricSchoolDetailsCard(
+                expansionTileController:
+                    metricSchoolDetailsExpansionTileController,
+              )),
+              Flexible(
+                  child: IntermediateSchoolDetailsCard(
+                expansionTileController:
+                    intermediateSchoolDetailsExpansionTileController,
               )),
               Flexible(
                   child: Padding(

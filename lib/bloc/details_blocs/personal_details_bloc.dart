@@ -18,7 +18,7 @@ class PersonalDetailsBloc
 
     //TODO: Add API Calls
 
-    await Future.delayed(const Duration(seconds: 10)).then((_) => emit(
+    await Future.delayed(const Duration(seconds: 5)).then((_) => emit(
         FetchedPersonalDetailsState(
             personalDetails: PersonalDetails(
                 dateOfBirth: "17/12/2000",

@@ -1,3 +1,9 @@
+import 'package:college_placement_flutter/bloc/details_blocs/intermediate_school_details_bloc.dart';
+import 'package:college_placement_flutter/bloc/details_blocs/intermediate_school_details_events.dart';
+import 'package:college_placement_flutter/bloc/details_blocs/metric_school_details_bloc.dart';
+import 'package:college_placement_flutter/bloc/details_blocs/metric_school_details_events.dart';
+import 'package:college_placement_flutter/bloc/details_blocs/undergraduate_details_bloc.dart';
+import 'package:college_placement_flutter/bloc/details_blocs/undergraduate_details_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,7 +53,7 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
             DriveTileName(
                 companyName: widget.company.name,
                 driveType: widget.company.driveType,
-                companyID: widget.company.driveID,
+                companyID: widget.company.companyID,
                 imageURL: widget.company.imageURL),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -68,6 +74,16 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
                                 const FetchContactDetailsEvent(studentID: "1"));
                             BlocProvider.of<PersonalDetailsBloc>(context).add(
                                 const FetchPersonalDetailsEvent(
+                                    studentID: "1"));
+                            BlocProvider.of<UndergraduateDetailsBloc>(context)
+                                .add(const FetchUndergraduateDetailsEvent(
+                                    studentID: "1"));
+                            BlocProvider.of<MetricSchoolDetailsBloc>(context)
+                                .add(const FetchMetricSchoolDetailsEvent(
+                                    studentID: "1"));
+                            BlocProvider.of<IntermediateSchoolDetailsBloc>(
+                                    context)
+                                .add(const FetchIntermediateSchoolDetailsEvent(
                                     studentID: "1"));
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>

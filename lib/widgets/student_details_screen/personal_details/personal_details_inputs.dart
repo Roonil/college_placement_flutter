@@ -98,7 +98,7 @@ class PersonalDetailsInputs extends StatelessWidget {
             textInputAction: TextInputAction.next,
             validator: (date) {
               if (date == null) {
-                return "Pleasde enter a valid Date of Birth";
+                return "Please enter a valid Date of Birth";
               }
               try {
                 final DateTime currentDate =
@@ -112,7 +112,7 @@ class PersonalDetailsInputs extends StatelessWidget {
 
                 return null;
               } catch (_) {
-                return "Pleease enter a valid Date of Birth";
+                return "Please enter a valid Date of Birth";
               }
             },
             decoration: InputDecoration(

@@ -1,6 +1,6 @@
 class Company {
   final String name,
-      driveID,
+      companyID,
       driveType,
       timeLeft,
       imageURL,
@@ -18,7 +18,7 @@ class Company {
 
   Company(
       {required this.name,
-      required this.driveID,
+      required this.companyID,
       required this.driveType,
       required this.timeLeft,
       required this.imageURL,
@@ -39,9 +39,9 @@ class Company {
   bool operator ==(Object other) {
     return other is Company &&
         other.runtimeType == runtimeType &&
-        other.driveID == driveID;
+        other.companyID == companyID;
   }
 
   @override
-  int get hashCode => driveID.hashCode;
+  int get hashCode => companyID.hashCode;
 }

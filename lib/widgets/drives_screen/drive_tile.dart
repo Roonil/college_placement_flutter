@@ -33,7 +33,7 @@ class DriveTile extends StatelessWidget {
                       runSpacing: 8,
                       children: [
                         DriveTileName(
-                            companyID: company.driveID,
+                            companyID: company.companyID,
                             companyName: company.name,
                             driveType: company.driveType,
                             imageURL: company.imageURL),

@@ -2,7 +2,7 @@ import '../models/company.dart';
 
 final Set<Company> companies = {
   Company(
-      driveID: "1",
+      companyID: "1",
       name: "Hogwarts",
       driveType: "Online",
       startedAtTime: "8 hours",
@@ -20,7 +20,7 @@ final Set<Company> companies = {
       process: ["Interview"],
       hasRegistered: false),
   Company(
-      driveID: "2",
+      companyID: "2",
       name: "Ministry of Magic",
       driveType: "On Campus",
       startedAtTime: "12 hours",
@@ -38,7 +38,7 @@ final Set<Company> companies = {
       process: ["Should talk to Lucius Malfoy for the process"],
       hasRegistered: true),
   Company(
-      driveID: "3",
+      companyID: "3",
       name: "Ministry of Magic",
       driveType: "Online/On Campus",
       startedAtTime: "12 hours",
@@ -56,7 +56,7 @@ final Set<Company> companies = {
       process: ["Should talk to Lucius Malfoy for the process"],
       hasRegistered: false),
   Company(
-      driveID: "4",
+      companyID: "4",
       name: "Ministry of Magic",
       driveType: "On Campus",
       startedAtTime: "12 hours",
@@ -74,7 +74,7 @@ final Set<Company> companies = {
       process: ["Should talk to Lucius Malfoy for the process"],
       hasRegistered: true),
   Company(
-      driveID: "5",
+      companyID: "5",
       name: "Ministry of Magic",
       driveType: "Online",
       startedAtTime: "12 hours",
@@ -92,7 +92,7 @@ final Set<Company> companies = {
       process: ["Should talk to Lucius Malfoy for the process"],
       hasRegistered: false),
   Company(
-      driveID: "6",
+      companyID: "6",
       name: "Ministry of Magic",
       driveType: "Online/On Campus",
       startedAtTime: "12 hours",
