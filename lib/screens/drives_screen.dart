@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io' show Platform;
 
 import '../dummy_data/companies.dart';
 import '../dummy_data/filters.dart';
@@ -49,131 +50,165 @@ class _DrivesScreenState extends State<DrivesScreen> {
                   ),
               icon: const Icon(Icons.settings)),
           IconButton(
-              onPressed: () =>
-                  Theme.of(context).colorScheme.brightness == Brightness.dark
-                      ? MyApp.of(context).changeTheme(ThemeMode.light)
-                      : MyApp.of(context).changeTheme(ThemeMode.dark),
-              icon: Icon(
+            onPressed: () =>
                 Theme.of(context).colorScheme.brightness == Brightness.dark
-                    ? Icons.wb_sunny_rounded
-                    : Icons.nightlight_round,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ))
+                    ? MyApp.of(context).changeTheme(ThemeMode.light)
+                    : MyApp.of(context).changeTheme(ThemeMode.dark),
+            icon: Icon(
+              Theme.of(context).colorScheme.brightness == Brightness.dark
+                  ? Icons.wb_sunny_rounded
+                  : Icons.nightlight_round,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+            tooltip: "Change Theme",
+          )
         ],
       ),
       //TODO: Add function to mark drives (review for later-ish)
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, bottom: 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0, right: 8),
-                      child: TextFormField(
-                        controller: searchController,
-                        onFieldSubmitted: (value) => setState(() {
-                          filteredCompanies = searchCompanies(
-                              companies: previouslyFilteredCompanies,
-                              searchString: value.trim().toLowerCase());
-                        }),
-                        decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.search),
-                              onPressed: () {
-                                setState(() {
-                                  filteredCompanies = searchCompanies(
-                                      companies: previouslyFilteredCompanies,
-                                      searchString: searchController.text
-                                          .trim()
-                                          .toLowerCase());
-                                });
-                              },
-                            ),
-                            isDense: true,
-                            label: const Text("Search for Drives"),
-                            contentPadding: const EdgeInsets.all(10),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20))),
+      endDrawer: !Platform.isAndroid && !Platform.isIOS
+          ? Drawer(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                //TODO: Show filter sub-menu on side on Desktops
+                child: FilterBuilder(
+                    filters: filters,
+                    applyFilterCallBack: (filterType) {
+                      setState(() {
+                        previouslyFilteredCompanies =
+                            FilterFunctions.applyFilters(
+                                companies: companies, filterType: filterType);
+
+                        filteredCompanies = searchCompanies(
+                            searchString:
+                                searchController.text.trim().toLowerCase(),
+                            companies: previouslyFilteredCompanies);
+                      });
+                    }),
+              ),
+            )
+          : null,
+
+      body: Builder(builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, bottom: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0, right: 8),
+                        //TODO: Add criteria using which to search (eg name, description, roles etc (FFBE))
+                        child: TextFormField(
+                          controller: searchController,
+                          onFieldSubmitted: (value) => setState(() {
+                            filteredCompanies = searchCompanies(
+                                companies: previouslyFilteredCompanies,
+                                searchString: value.trim().toLowerCase());
+                          }),
+                          decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.search),
+                                tooltip: "Search",
+                                onPressed: () {
+                                  setState(() {
+                                    filteredCompanies = searchCompanies(
+                                        companies: previouslyFilteredCompanies,
+                                        searchString: searchController.text
+                                            .trim()
+                                            .toLowerCase());
+                                  });
+                                },
+                              ),
+                              isDense: true,
+                              label: const Text("Search for Drives"),
+                              contentPadding: const EdgeInsets.all(10),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20))),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: IconButton(
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: IconButton(
                         padding: EdgeInsets.zero,
-                        onPressed: () => showModalBottomSheet(
-                              useRootNavigator: true,
-                              context: context,
-                              builder: (context) => Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                //TODO: Show filter sub-menu on side on Desktops
-                                child: FilterBuilder(
-                                    filters: filters,
-                                    applyFilterCallBack: (filterType) {
-                                      setState(() {
-                                        previouslyFilteredCompanies =
-                                            FilterFunctions.applyFilters(
-                                                companies: companies,
-                                                filterType: filterType);
+                        onPressed: () => Platform.isAndroid || Platform.isIOS
+                            ? showModalBottomSheet(
+                                useRootNavigator: true,
+                                context: context,
+                                builder: (context) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  //TODO: Show filter sub-menu on side on Desktops
+                                  child: FilterBuilder(
+                                      filters: filters,
+                                      applyFilterCallBack: (filterType) {
+                                        setState(() {
+                                          previouslyFilteredCompanies =
+                                              FilterFunctions.applyFilters(
+                                                  companies: companies,
+                                                  filterType: filterType);
 
-                                        filteredCompanies = searchCompanies(
-                                            searchString: searchController.text
-                                                .trim()
-                                                .toLowerCase(),
-                                            companies:
-                                                previouslyFilteredCompanies);
-                                      });
-                                    }),
-                              ),
-                            ),
+                                          filteredCompanies = searchCompanies(
+                                              searchString: searchController
+                                                  .text
+                                                  .trim()
+                                                  .toLowerCase(),
+                                              companies:
+                                                  previouslyFilteredCompanies);
+                                        });
+                                      }),
+                                ),
+                              )
+                            : Scaffold.of(context).openEndDrawer(),
                         icon: Icon(
                           Icons.filter_list_rounded,
                           color: FilterFunctions.appliedFilters.isNotEmpty
                               ? Theme.of(context).colorScheme.tertiary
                               : null,
-                        )),
-                  )
-                  //TODO: Add clear filters button
-
-                  // Expanded(
-                  //   child: FilterBuilder(
-                  //       filters: filters,
-                  //       onTap: (filterType) {
-                  //         setState(() {
-                  //           filteredCompanies = FilterFunctions.applyFilters(
-                  //               companies: companies, filterType: filterType);
-                  //         });
-                  //       }),
-                  // )
-                ],
-              ),
-            ),
-            filteredCompanies.isEmpty
-                ? Text(
-                    "No Drives Found!",
-                    style: Theme.of(context).textTheme.titleMedium,
-                  )
-                : Expanded(
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 20,
+                        ),
+                        tooltip: "Filters",
                       ),
-                      itemCount: filteredCompanies.length,
-                      itemBuilder: (context, index) => DriveTile(
-                          company: filteredCompanies.elementAt(index)),
+                    )
+                    //TODO: Add clear filters button
+
+                    // Expanded(
+                    //   child: FilterBuilder(
+                    //       filters: filters,
+                    //       onTap: (filterType) {
+                    //         setState(() {
+                    //           filteredCompanies = FilterFunctions.applyFilters(
+                    //               companies: companies, filterType: filterType);
+                    //         });
+                    //       }),
+                    // )
+                  ],
+                ),
+              ),
+              filteredCompanies.isEmpty
+                  ? Text(
+                      "No Drives Found!",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    )
+                  : Expanded(
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) => const SizedBox(
+                          height: 20,
+                        ),
+                        itemCount: filteredCompanies.length,
+                        itemBuilder: (context, index) => DriveTile(
+                            company: filteredCompanies.elementAt(index)),
+                      ),
                     ),
-                  ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

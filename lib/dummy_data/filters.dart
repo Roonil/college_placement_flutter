@@ -15,7 +15,7 @@ final Set<Filter> filters = {
       selectedValue: null,
       filterItems: {
         FilterType.onlineDriveType: "Online",
-        FilterType.offlineDriveType: "Offline",
+        FilterType.offlineDriveType: "On Campus",
         FilterType.hybridDriveType: "Hybrid"
       },
       clearType: FilterType.clearDriveType)
