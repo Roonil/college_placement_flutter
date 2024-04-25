@@ -1,16 +1,10 @@
 class IntermediateSchoolDetails {
-  final String schoolName,
-      schoolCity,
-      passingYear,
-      percentageScore,
-      board,
-      medium;
+  final String schoolName, schoolCity, percentageScore, board;
 
-  IntermediateSchoolDetails(
-      {required this.schoolName,
-      required this.schoolCity,
-      required this.passingYear,
-      required this.percentageScore,
-      required this.board,
-      required this.medium});
+  IntermediateSchoolDetails({
+    required this.schoolName,
+    required this.schoolCity,
+    required this.percentageScore,
+    required this.board,
+  });
 }

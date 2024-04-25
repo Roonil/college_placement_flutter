@@ -36,8 +36,8 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
       listenWhen: (previous, current) =>
           (previous is FetchingPersonalDetailsState &&
               current is FetchedPersonalDetailsState) ||
-          previous is UpdatingPersonalDetailsState &&
-              current is UpdatedPersonalDetailsState,
+          (previous is UpdatingPersonalDetailsState &&
+              current is UpdatedPersonalDetailsState),
       listener: (context, state) {
         if (state is FetchedPersonalDetailsState) {
           firstNameController.text = state.personalDetails.firstName;

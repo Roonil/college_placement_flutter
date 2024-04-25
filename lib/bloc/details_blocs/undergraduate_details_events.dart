@@ -10,15 +10,20 @@ abstract class ContactDetailsEvent {
 
 @immutable
 class FetchUndergraduateDetailsEvent implements ContactDetailsEvent {
-  final String studentID;
+  final int studentID;
+  final String token;
 
-  const FetchUndergraduateDetailsEvent({required this.studentID});
+  const FetchUndergraduateDetailsEvent(
+      {required this.studentID, required this.token});
 }
 
 @immutable
 class UpdateUndergraduateDetailsEvent implements ContactDetailsEvent {
-  final String studentID;
+  final int studentID;
+  final String token;
   final UndergraduateDetails undergraduateDetails;
   const UpdateUndergraduateDetailsEvent(
-      {required this.studentID, required this.undergraduateDetails});
+      {required this.studentID,
+      required this.undergraduateDetails,
+      required this.token});
 }

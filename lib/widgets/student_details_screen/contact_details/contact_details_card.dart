@@ -1,10 +1,12 @@
-import 'package:college_placement_flutter/bloc/details_blocs/contact_details_events.dart';
-import 'package:college_placement_flutter/models/contact_details.dart';
-import 'package:college_placement_flutter/widgets/student_details_screen/contact_details/contact_details_inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../../bloc/details_blocs/contact_details_events.dart';
+import '../../../bloc/login_bloc.dart';
+import '../../../bloc/login_bloc_states.dart';
+import '../../../models/contact_details.dart';
+import './contact_details_inputs.dart';
 import '../../../bloc/details_blocs/contact_details_bloc.dart';
 import '../../../bloc/details_blocs/contact_details_states.dart';
 import '../details_subtitle.dart';
@@ -24,18 +26,11 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController addressLine1Controller = TextEditingController();
   final TextEditingController addressLine2Controller = TextEditingController();
-  final TextEditingController stateController = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
-  final TextEditingController pinCodeController = TextEditingController();
-  final TextEditingController countryController = TextEditingController();
+
   String? previousEmailAddress,
       previousPhoneNumber,
       previousAddressLine2,
-      previousAddressLine1,
-      previousState,
-      previousCity,
-      previousPinCode,
-      previousCountry;
+      previousAddressLine1;
 
   bool shouldShowButtons = false;
 
@@ -43,36 +38,25 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
   Widget build(BuildContext context) {
     return BlocConsumer<ContactDetailsBloc, ContactDetailsState>(
       listenWhen: (previous, current) =>
-          previous is FetchingContactDetailsState &&
-          current is FetchedContactDetailsState,
+          (previous is FetchingContactDetailsState &&
+              current is FetchedContactDetailsState) ||
+          (previous is UpdatingContactDetailsState &&
+              current is UpdatedContactDetailsState),
       listener: (context, state) {
         if (state is FetchedContactDetailsState) {
           emailAddressController.text = state.contactDetails.emailAddress;
           phoneNumberController.text = state.contactDetails.phoneNumber;
           addressLine1Controller.text = state.contactDetails.addressLine1;
           addressLine2Controller.text = state.contactDetails.addressLine2;
-          stateController.text = state.contactDetails.state;
-          cityController.text = state.contactDetails.city;
-          pinCodeController.text = state.contactDetails.pinCode;
-          countryController.text = state.contactDetails.country;
-
           previousEmailAddress = emailAddressController.text.trim();
           previousPhoneNumber = phoneNumberController.text.trim();
           previousAddressLine2 = addressLine2Controller.text.trim();
           previousAddressLine1 = addressLine1Controller.text.trim();
-          previousState = stateController.text.trim();
-          previousCity = cityController.text.trim();
-          previousPinCode = pinCodeController.text.trim();
-          previousCountry = countryController.text.trim();
         } else if (state is UpdatedContactDetailsState) {
           previousEmailAddress = emailAddressController.text.trim();
           previousPhoneNumber = phoneNumberController.text.trim();
           previousAddressLine2 = addressLine2Controller.text.trim();
           previousAddressLine1 = addressLine1Controller.text.trim();
-          previousState = stateController.text.trim();
-          previousCity = cityController.text.trim();
-          previousPinCode = pinCodeController.text.trim();
-          previousCountry = countryController.text.trim();
         }
       },
       buildWhen: (previous, current) =>
@@ -88,11 +72,7 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
             previousEmailAddress != emailAddressController.text.trim() ||
                 previousPhoneNumber != phoneNumberController.text.trim() ||
                 previousAddressLine2 != addressLine2Controller.text.trim() ||
-                previousAddressLine1 != addressLine1Controller.text.trim() ||
-                previousState != stateController.text.trim() ||
-                previousCity != cityController.text.trim() ||
-                previousPinCode != pinCodeController.text.trim() ||
-                previousCountry != countryController.text.trim();
+                previousAddressLine1 != addressLine1Controller.text.trim();
 
         return Card(
           elevation: 4,
@@ -130,20 +110,25 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                           ? BlocProvider.of<ContactDetailsBloc>(context).add(
                               UpdateContactDetailsEvent(
                                   //TODO: Sync Student details from logged in details
-                                  studentID: "1",
+                                  studentID:
+                                      (BlocProvider.of<LoginBloc>(context).state
+                                              as LoggedInState)
+                                          .student
+                                          .id,
+                                  token: (BlocProvider.of<LoginBloc>(context)
+                                          .state as LoggedInState)
+                                      .student
+                                      .token,
                                   contactDetails: ContactDetails(
-                                      emailAddress:
-                                          emailAddressController.text.trim(),
-                                      phoneNumber:
-                                          phoneNumberController.text.trim(),
-                                      addressLine2:
-                                          addressLine2Controller.text.trim(),
-                                      addressLine1:
-                                          addressLine1Controller.text.trim(),
-                                      state: stateController.text.trim(),
-                                      city: cityController.text.trim(),
-                                      pinCode: pinCodeController.text.trim(),
-                                      country: countryController.text.trim())))
+                                    emailAddress:
+                                        emailAddressController.text.trim(),
+                                    phoneNumber:
+                                        phoneNumberController.text.trim(),
+                                    addressLine2:
+                                        addressLine2Controller.text.trim(),
+                                    addressLine1:
+                                        addressLine1Controller.text.trim(),
+                                  )))
                           : null;
                     },
                     onUndo: () {
@@ -155,10 +140,6 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                             previousAddressLine1 ?? "";
                         addressLine2Controller.text =
                             previousAddressLine2 ?? "";
-                        stateController.text = previousState ?? "";
-                        cityController.text = previousCity ?? "";
-                        pinCodeController.text = previousPinCode ?? "";
-                        countryController.text = previousCountry ?? "";
                       });
                     },
                     shouldShowButtons: shouldShowButtons,
@@ -181,10 +162,6 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                                       addressLine1Controller,
                                   addressLine2Controller:
                                       addressLine2Controller,
-                                  stateController: stateController,
-                                  cityController: cityController,
-                                  pinCodeController: pinCodeController,
-                                  countryController: countryController,
                                   isEdited: false,
                                   inputsEnabled: true,
                                   formKey: formKey,
@@ -195,10 +172,6 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                                 phoneNumberController: phoneNumberController,
                                 addressLine1Controller: addressLine1Controller,
                                 addressLine2Controller: addressLine2Controller,
-                                stateController: stateController,
-                                cityController: cityController,
-                                pinCodeController: pinCodeController,
-                                countryController: countryController,
                                 isEdited: isEdited,
                                 inputsEnabled:
                                     state is! UpdatingContactDetailsState,

@@ -1,9 +1,8 @@
-import 'package:college_placement_flutter/widgets/student_details_screen/intermediate_school_details/intermediate_school_details_card.dart';
-import 'package:college_placement_flutter/widgets/student_details_screen/metric_school_details/metric_school_details_card.dart';
-
-import '../widgets/student_details_screen/undergraduate_details/undergraduate_details_card.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/student_details_screen/intermediate_school_details/intermediate_school_details_card.dart';
+import '../widgets/student_details_screen/metric_school_details/metric_school_details_card.dart';
+import '../widgets/student_details_screen/undergraduate_details/undergraduate_details_card.dart';
 import '../widgets/student_details_screen/contact_details/contact_details_card.dart';
 import '../widgets/student_details_screen/personal_details/personal_details_card.dart';
 
@@ -41,30 +40,43 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Flexible(
-                  child: PersonalDetailsCard(
-                expansionTileController: personalDetailsExpansionTileController,
-              )),
-              Flexible(
-                  child: UndergraduateDetailsCard(
-                expansionTileController:
-                    undergraduateDetailsExpansionTileController,
-              )),
-              Flexible(
-                  child: MetricSchoolDetailsCard(
-                expansionTileController:
-                    metricSchoolDetailsExpansionTileController,
-              )),
-              Flexible(
-                  child: IntermediateSchoolDetailsCard(
-                expansionTileController:
-                    intermediateSchoolDetailsExpansionTileController,
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: PersonalDetailsCard(
+                  expansionTileController:
+                      personalDetailsExpansionTileController,
+                ),
               )),
               Flexible(
                   child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ContactDetailsCard(
                     expansionTileController:
                         contactDetailsExpansionTileController),
+              )),
+              Flexible(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: UndergraduateDetailsCard(
+                  expansionTileController:
+                      undergraduateDetailsExpansionTileController,
+                ),
+              )),
+              Flexible(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: IntermediateSchoolDetailsCard(
+                  expansionTileController:
+                      intermediateSchoolDetailsExpansionTileController,
+                ),
+              )),
+              Flexible(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: MetricSchoolDetailsCard(
+                  expansionTileController:
+                      metricSchoolDetailsExpansionTileController,
+                ),
               )),
               Flexible(
                   child: TextButton(

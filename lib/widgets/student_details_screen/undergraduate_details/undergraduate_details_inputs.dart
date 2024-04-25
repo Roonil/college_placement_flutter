@@ -41,25 +41,53 @@ class UndergraduateDetailsInputs extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Flexible(
-                flex: 7,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextFormField(
-                    enabled: inputsEnabled,
-                    onChanged: onChanged,
-                    controller: universityEmailController,
-                    textInputAction: TextInputAction.next,
-                    validator: (email) => EmailValidator.validate(email ?? "")
-                        ? null
-                        : "Please enter a valid Email Address",
-                    decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.all(8),
-                        label: const Text("University Email"),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20))),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    flex: 7,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: TextFormField(
+                        enabled: inputsEnabled,
+                        onChanged: onChanged,
+                        controller: universityEmailController,
+                        textInputAction: TextInputAction.next,
+                        validator: (email) =>
+                            EmailValidator.validate(email ?? "")
+                                ? null
+                                : "Please enter a valid Email Address",
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(8),
+                            label: const Text("University Email"),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20))),
+                      ),
+                    ),
                   ),
-                ),
+                  const Spacer(),
+                  Flexible(
+                    flex: 7,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: TextFormField(
+                        enabled: inputsEnabled,
+                        onChanged: onChanged,
+                        controller: universityIdController,
+                        textInputAction: TextInputAction.next,
+                        validator: (uid) =>
+                            uid != null && uid.isNotEmpty && uid.length >= 3
+                                ? null
+                                : "Please enter a valid UID",
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(8),
+                            label: const Text("University ID"),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20))),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -67,7 +95,7 @@ class UndergraduateDetailsInputs extends StatelessWidget {
                   Flexible(
                     flex: 7,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: TextFormField(
                         enabled: inputsEnabled,
                         onChanged: onChanged,
@@ -100,7 +128,7 @@ class UndergraduateDetailsInputs extends StatelessWidget {
                   Flexible(
                     flex: 7,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: TextFormField(
                         enabled: inputsEnabled,
                         onChanged: onChanged,
@@ -130,7 +158,7 @@ class UndergraduateDetailsInputs extends StatelessWidget {
                   Flexible(
                     flex: 7,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: TextFormField(
                         enabled: inputsEnabled,
                         onChanged: onChanged,
@@ -162,7 +190,7 @@ class UndergraduateDetailsInputs extends StatelessWidget {
                   Flexible(
                     flex: 7,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: TextFormField(
                         enabled: inputsEnabled,
                         onChanged: onChanged,
@@ -190,7 +218,7 @@ class UndergraduateDetailsInputs extends StatelessWidget {
                   Flexible(
                     flex: 7,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: TextFormField(
                         enabled: inputsEnabled,
                         onChanged: onChanged,
@@ -221,26 +249,29 @@ class UndergraduateDetailsInputs extends StatelessWidget {
                 children: [
                   Flexible(
                     flex: 7,
-                    child: TextFormField(
-                      enabled: inputsEnabled,
-                      onChanged: onChanged,
-                      controller: backlogsController,
-                      textInputAction: TextInputAction.next,
-                      validator: (name) {
-                        final newName = RegExp(r"^(0|[1-9]|20)$");
-                        try {
-                          return (name != null && newName.hasMatch(name)
-                              ? null
-                              : "Please enter a valid Backlogs");
-                        } catch (_) {
-                          return "not in range";
-                        }
-                      },
-                      decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(8),
-                          label: const Text("Backlogs"),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: TextFormField(
+                        enabled: inputsEnabled,
+                        onChanged: onChanged,
+                        controller: backlogsController,
+                        textInputAction: TextInputAction.next,
+                        validator: (name) {
+                          final newName = RegExp(r"^(0|[1-9]|20)$");
+                          try {
+                            return (name != null && newName.hasMatch(name)
+                                ? null
+                                : "Please enter a valid Backlogs");
+                          } catch (_) {
+                            return "not in range";
+                          }
+                        },
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(8),
+                            label: const Text("Backlogs"),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20))),
+                      ),
                     ),
                   ),
                 ],

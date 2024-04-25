@@ -5,6 +5,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../../bloc/details_blocs/intermediate_school_details_bloc.dart';
 import '../../../bloc/details_blocs/intermediate_school_details_events.dart';
 import '../../../bloc/details_blocs/intermediate_school_details_states.dart';
+import '../../../bloc/login_bloc.dart';
+import '../../../bloc/login_bloc_states.dart';
 import '../../../models/intermediate_school_details.dart';
 import '../details_subtitle.dart';
 import './intermediate_school_details_inputs.dart';
@@ -26,17 +28,15 @@ class _IntermediateSchoolDetailsCardState
 
   final TextEditingController schoolNameController = TextEditingController();
   final TextEditingController schoolCityController = TextEditingController();
-  final TextEditingController passingYearController = TextEditingController();
+
   final TextEditingController percentageScoreController =
       TextEditingController();
   final TextEditingController boardController = TextEditingController();
-  final TextEditingController mediumController = TextEditingController();
+
   String? previousSchoolName,
       previousSchoolCity,
-      previousPassingYear,
       previousPercentageScore,
-      previousBoard,
-      previousMedium;
+      previousBoard;
 
   bool shouldShowButtons = false;
   @override
@@ -54,26 +54,21 @@ class _IntermediateSchoolDetailsCardState
               state.intermediateSchoolDetails.schoolName;
           schoolCityController.text =
               state.intermediateSchoolDetails.schoolCity;
-          passingYearController.text =
-              state.intermediateSchoolDetails.passingYear;
+
           percentageScoreController.text =
               state.intermediateSchoolDetails.percentageScore;
           boardController.text = state.intermediateSchoolDetails.board;
-          mediumController.text = state.intermediateSchoolDetails.medium;
 
           previousSchoolName = schoolNameController.text.trim();
           previousSchoolCity = schoolCityController.text.trim();
-          previousPassingYear = passingYearController.text.trim();
+
           previousPercentageScore = percentageScoreController.text.trim();
           previousBoard = boardController.text.trim();
-          previousMedium = mediumController.text.trim();
         } else if (state is UpdatedIntermediateSchoolDetailsState) {
           previousSchoolName = schoolNameController.text.trim();
           previousSchoolCity = schoolCityController.text.trim();
-          previousPassingYear = passingYearController.text.trim();
           previousPercentageScore = percentageScoreController.text.trim();
           previousBoard = boardController.text.trim();
-          previousMedium = mediumController.text.trim();
         }
       },
       buildWhen: (previous, current) =>
@@ -88,10 +83,8 @@ class _IntermediateSchoolDetailsCardState
         bool isEdited = previousSchoolName !=
                 schoolNameController.text.trim() ||
             previousSchoolCity != schoolCityController.text.trim() ||
-            previousPassingYear != passingYearController.text.trim() ||
             previousPercentageScore != percentageScoreController.text.trim() ||
-            previousBoard != boardController.text.trim() ||
-            previousMedium != mediumController.text.trim();
+            previousBoard != boardController.text.trim();
         return Card(
           elevation: 4,
           child: ClipRRect(
@@ -129,32 +122,35 @@ class _IntermediateSchoolDetailsCardState
                                   context)
                               .add(UpdateIntermediateSchoolDetailsEvent(
                                   //TODO: Sync Student details from logged in details
-                                  studentID: "1",
+                                  studentID:
+                                      (BlocProvider.of<LoginBloc>(context).state
+                                              as LoggedInState)
+                                          .student
+                                          .id,
+                                  token: (BlocProvider.of<LoginBloc>(context)
+                                          .state as LoggedInState)
+                                      .student
+                                      .token,
                                   intermediateSchoolDetails:
                                       IntermediateSchoolDetails(
-                                          schoolName:
-                                              schoolNameController.text.trim(),
-                                          schoolCity:
-                                              schoolCityController.text.trim(),
-                                          passingYear:
-                                              passingYearController.text.trim(),
-                                          percentageScore:
-                                              percentageScoreController.text
-                                                  .trim(),
-                                          board: boardController.text.trim(),
-                                          medium:
-                                              mediumController.text.trim())))
+                                    schoolName:
+                                        schoolNameController.text.trim(),
+                                    schoolCity:
+                                        schoolCityController.text.trim(),
+                                    percentageScore:
+                                        percentageScoreController.text.trim(),
+                                    board: boardController.text.trim(),
+                                  )))
                           : null;
                     },
                     onUndo: () {
                       setState(() {
                         schoolNameController.text = previousSchoolName ?? "";
                         schoolCityController.text = previousSchoolCity ?? "";
-                        passingYearController.text = previousPassingYear ?? "";
+
                         percentageScoreController.text =
                             previousPercentageScore ?? "";
                         boardController.text = previousBoard ?? "";
-                        mediumController.text = previousMedium ?? "";
                       });
                     },
                     shouldShowButtons: shouldShowButtons,
@@ -172,11 +168,9 @@ class _IntermediateSchoolDetailsCardState
                                 child: IntermediateSchoolDetailsInputs(
                                   schoolNameController: schoolNameController,
                                   schoolCityController: schoolCityController,
-                                  passingYearController: passingYearController,
                                   percentageScoreController:
                                       percentageScoreController,
                                   boardController: boardController,
-                                  mediumController: mediumController,
                                   isEdited: false,
                                   inputsEnabled: true,
                                   formKey: formKey,
@@ -185,11 +179,9 @@ class _IntermediateSchoolDetailsCardState
                             : IntermediateSchoolDetailsInputs(
                                 schoolNameController: schoolNameController,
                                 schoolCityController: schoolCityController,
-                                passingYearController: passingYearController,
                                 percentageScoreController:
                                     percentageScoreController,
                                 boardController: boardController,
-                                mediumController: mediumController,
                                 isEdited: isEdited,
                                 inputsEnabled: state
                                     is! UpdatingIntermediateSchoolDetailsState,

@@ -5,6 +5,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../../bloc/details_blocs/metric_school_details_bloc.dart';
 import '../../../bloc/details_blocs/metric_school_details_events.dart';
 import '../../../bloc/details_blocs/metric_school_details_states.dart';
+import '../../../bloc/login_bloc.dart';
+import '../../../bloc/login_bloc_states.dart';
 import '../../../models/metric_school_details.dart';
 import '../details_subtitle.dart';
 import './metric_school_details_inputs.dart';
@@ -25,17 +27,14 @@ class _MetricSchoolDetailsCardState extends State<MetricSchoolDetailsCard> {
 
   final TextEditingController schoolNameController = TextEditingController();
   final TextEditingController schoolCityController = TextEditingController();
-  final TextEditingController passingYearController = TextEditingController();
+
   final TextEditingController percentageScoreController =
       TextEditingController();
   final TextEditingController boardController = TextEditingController();
-  final TextEditingController mediumController = TextEditingController();
   String? previousSchoolName,
       previousSchoolCity,
-      previousPassingYear,
       previousPercentageScore,
-      previousBoard,
-      previousMedium;
+      previousBoard;
 
   bool shouldShowButtons = false;
   @override
@@ -50,25 +49,20 @@ class _MetricSchoolDetailsCardState extends State<MetricSchoolDetailsCard> {
         if (state is FetchedMetricSchoolDetailsState) {
           schoolNameController.text = state.metricSchoolDetails.schoolName;
           schoolCityController.text = state.metricSchoolDetails.schoolCity;
-          passingYearController.text = state.metricSchoolDetails.passingYear;
+
           percentageScoreController.text =
               state.metricSchoolDetails.percentageScore;
           boardController.text = state.metricSchoolDetails.board;
-          mediumController.text = state.metricSchoolDetails.medium;
 
           previousSchoolName = schoolNameController.text.trim();
           previousSchoolCity = schoolCityController.text.trim();
-          previousPassingYear = passingYearController.text.trim();
           previousPercentageScore = percentageScoreController.text.trim();
           previousBoard = boardController.text.trim();
-          previousMedium = mediumController.text.trim();
         } else if (state is UpdatedMetricSchoolDetailsState) {
           previousSchoolName = schoolNameController.text.trim();
           previousSchoolCity = schoolCityController.text.trim();
-          previousPassingYear = passingYearController.text.trim();
           previousPercentageScore = percentageScoreController.text.trim();
           previousBoard = boardController.text.trim();
-          previousMedium = mediumController.text.trim();
         }
       },
       buildWhen: (previous, current) =>
@@ -83,10 +77,8 @@ class _MetricSchoolDetailsCardState extends State<MetricSchoolDetailsCard> {
         bool isEdited = previousSchoolName !=
                 schoolNameController.text.trim() ||
             previousSchoolCity != schoolCityController.text.trim() ||
-            previousPassingYear != passingYearController.text.trim() ||
             previousPercentageScore != percentageScoreController.text.trim() ||
-            previousBoard != boardController.text.trim() ||
-            previousMedium != mediumController.text.trim();
+            previousBoard != boardController.text.trim();
         return Card(
           elevation: 4,
           child: ClipRRect(
@@ -122,30 +114,33 @@ class _MetricSchoolDetailsCardState extends State<MetricSchoolDetailsCard> {
                       formKey.currentState!.validate() && isEdited
                           ? BlocProvider.of<MetricSchoolDetailsBloc>(context)
                               .add(UpdateMetricSchoolDetailsEvent(
-                                  //TODO: Sync Student details from logged in details
-                                  studentID: "1",
+                                  token: (BlocProvider.of<LoginBloc>(context)
+                                          .state as LoggedInState)
+                                      .student
+                                      .token,
+                                  studentID:
+                                      (BlocProvider.of<LoginBloc>(context).state
+                                              as LoggedInState)
+                                          .student
+                                          .id,
                                   metricSchoolDetails: MetricSchoolDetails(
                                       schoolName:
                                           schoolNameController.text.trim(),
                                       schoolCity:
                                           schoolCityController.text.trim(),
-                                      passingYear:
-                                          passingYearController.text.trim(),
                                       percentageScore:
                                           percentageScoreController.text.trim(),
-                                      board: boardController.text.trim(),
-                                      medium: mediumController.text.trim())))
+                                      board: boardController.text.trim())))
                           : null;
                     },
                     onUndo: () {
                       setState(() {
                         schoolNameController.text = previousSchoolName ?? "";
                         schoolCityController.text = previousSchoolCity ?? "";
-                        passingYearController.text = previousPassingYear ?? "";
+
                         percentageScoreController.text =
                             previousPercentageScore ?? "";
                         boardController.text = previousBoard ?? "";
-                        mediumController.text = previousMedium ?? "";
                       });
                     },
                     shouldShowButtons: shouldShowButtons,
@@ -163,11 +158,9 @@ class _MetricSchoolDetailsCardState extends State<MetricSchoolDetailsCard> {
                                 child: MetricSchoolDetailsInputs(
                                   schoolNameController: schoolNameController,
                                   schoolCityController: schoolCityController,
-                                  passingYearController: passingYearController,
                                   percentageScoreController:
                                       percentageScoreController,
                                   boardController: boardController,
-                                  mediumController: mediumController,
                                   isEdited: false,
                                   inputsEnabled: true,
                                   formKey: formKey,
@@ -176,11 +169,9 @@ class _MetricSchoolDetailsCardState extends State<MetricSchoolDetailsCard> {
                             : MetricSchoolDetailsInputs(
                                 schoolNameController: schoolNameController,
                                 schoolCityController: schoolCityController,
-                                passingYearController: passingYearController,
                                 percentageScoreController:
                                     percentageScoreController,
                                 boardController: boardController,
-                                mediumController: mediumController,
                                 isEdited: isEdited,
                                 inputsEnabled:
                                     state is! UpdatingMetricSchoolDetailsState,

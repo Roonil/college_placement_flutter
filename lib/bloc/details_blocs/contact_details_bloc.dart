@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
+import '../../constants.dart';
 import '../../models/contact_details.dart';
 import 'contact_details_events.dart';
 import 'contact_details_states.dart';
@@ -18,41 +22,98 @@ class ContactDetailsBloc
       FetchContactDetailsEvent event, Emitter<ContactDetailsState> emit) async {
     emit(const FetchingContactDetailsState(isLoading: true, authError: null));
 
-    //TODO: Add API Calls
+    //TODO: Check response body
 
-    await Future.delayed(const Duration(seconds: 2)).then((_) => emit(
-        FetchedContactDetailsState(
-            contactDetails: ContactDetails(
-                addressLine1: "AD1",
-                addressLine2: "AD2",
-                city: "city",
-                country: "cn",
-                emailAddress: "anan@gmail.com",
-                phoneNumber: "1234567890",
-                pinCode: "335001",
-                state: "S"),
-            isLoading: false,
-            authError: null)));
+    try {
+      final http.Response resp = await http.get(
+          Uri.parse("$getDetailsURL?type=id&id=${event.studentID}"),
+          headers: {
+            "Authorization": event.token,
+          }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => http.Response('Error', 408),
+      );
+
+      final jsonBody = jsonDecode(resp.body);
+      final jsonBodyData = jsonBody['acc'];
+
+      if (resp.statusCode == 200) {
+        await Future.delayed(const Duration(seconds: 0, milliseconds: 500))
+            .then((_) => emit(FetchedContactDetailsState(
+                contactDetails: ContactDetails(
+                  addressLine1: jsonBodyData['current_address'] ?? "",
+                  addressLine2: jsonBodyData['permanent_address'] ?? "",
+                  emailAddress: jsonBodyData['personal_email'] ?? "",
+                  phoneNumber: jsonBodyData['contact_number'] ?? "",
+                ),
+                isLoading: false,
+                authError: null)));
+      } else {
+        emit(const ContactDetailsFetchFailedState(
+            isLoading: false, authError: HttpException("Fetching Failed!")));
+      }
+    } catch (_) {
+      emit(const ContactDetailsFetchFailedState(
+          isLoading: false, authError: HttpException("An Error occured!")));
+    }
   }
 
   Future<FutureOr<void>> _updateContactDetails(UpdateContactDetailsEvent event,
       Emitter<ContactDetailsState> emit) async {
     emit(const UpdatingContactDetailsState(isLoading: true, authError: null));
 
-    //TODO: Add API Calls
+    //TODO: Check body
+    final body = <String, dynamic>{};
 
-    await Future.delayed(const Duration(seconds: 2)).then((_) => emit(
-        UpdatedContactDetailsState(
-            contactDetails: ContactDetails(
-                addressLine1: "Updated AD1",
-                addressLine2: "Updated AD2",
-                city: "UPD city",
-                country: "UPD cn",
-                emailAddress: "upd_anan@gmail.com",
-                phoneNumber: "1234567890",
-                pinCode: "335001",
-                state: "updS"),
-            isLoading: false,
-            authError: null)));
+    body['personal_email'] = event.contactDetails.emailAddress;
+    body['contact_number'] = event.contactDetails.phoneNumber;
+    body['current_address'] = event.contactDetails.addressLine1;
+    body['permanent_address'] = event.contactDetails.addressLine2;
+    // body['university'] = event.undergraduateDetails.university;
+    // body['university_email'] = event.undergraduateDetails.universityEmail;
+    // body['uid'] = event.undergraduateDetails.universityID;
+    // body['number_of_backlogs'] = event.undergraduateDetails.backlogs.toString();
+
+    try {
+      final http.Response resp = await http
+          .patch(Uri.parse("$patchDetailsURL?type=id&id=${event.studentID}"),
+              headers: {
+                "Authorization": event.token,
+              },
+              body: body)
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => http.Response('Error', 408),
+          );
+
+      if (resp.statusCode == 200) {
+        await Future.delayed(const Duration(seconds: 0, milliseconds: 500))
+            .then((_) => emit(UpdatedContactDetailsState(
+                contactDetails: event.contactDetails,
+                isLoading: false,
+                authError: null)));
+//TODO: Updating shows pending changes.
+      } else {
+        emit(const ContactDetailsUpdateFailedState(
+            isLoading: false, authError: HttpException("Fetching Failed!")));
+      }
+    } catch (_) {
+      emit(const ContactDetailsUpdateFailedState(
+          isLoading: false, authError: HttpException("An Error occured!")));
+    }
+
+    // await Future.delayed(const Duration(seconds: 4)).then((_) => emit(
+    //     UpdatedContactDetailsState(
+    //         contactDetails: ContactDetails(
+    //             addressLine1: "Updated AD1",
+    //             addressLine2: "Updated AD2",
+    //             city: "UPD city",
+    //             country: "UPD cn",
+    //             emailAddress: "upd_anan@gmail.com",
+    //             phoneNumber: "1234567890",
+    //             pinCode: "335001",
+    //             state: "updS"),
+    //         isLoading: false,
+    //         authError: null)));
   }
 }

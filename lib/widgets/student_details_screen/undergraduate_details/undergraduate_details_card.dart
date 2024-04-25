@@ -5,6 +5,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../../bloc/details_blocs/undergraduate_details_bloc.dart';
 import '../../../bloc/details_blocs/undergraduate_details_states.dart';
 import '../../../bloc/details_blocs/undergraduate_details_events.dart';
+import '../../../bloc/login_bloc.dart';
+import '../../../bloc/login_bloc_states.dart';
 import '../../../models/undergraduate_details.dart';
 import '../details_subtitle.dart';
 import './undergraduate_details_inputs.dart';
@@ -53,13 +55,14 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
       listener: (context, state) {
         if (state is FetchedUndergraduateDetailsState) {
           universityController.text = state.undergraduateDetails.university;
-          universityIdController.text = state.undergraduateDetails.universityId;
+          universityIdController.text = state.undergraduateDetails.universityID;
           universityEmailController.text =
               state.undergraduateDetails.universityEmail;
           degreeController.text = state.undergraduateDetails.degree;
           courseController.text = state.undergraduateDetails.course;
           batchController.text = state.undergraduateDetails.batch;
-          backlogsController.text = state.undergraduateDetails.backlogs;
+          backlogsController.text =
+              state.undergraduateDetails.backlogs.toString();
           currentCgpaController.text = state.undergraduateDetails.currentCgpa;
           previousUniversity = universityController.text.trim();
           previousUniversityId = universityIdController.text.trim();
@@ -138,12 +141,20 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
                                   ? BlocProvider.of<UndergraduateDetailsBloc>(context)
                                       .add(UpdateUndergraduateDetailsEvent(
                                           //TODO: Sync Student details from logged in details
-                                          studentID: "1",
+                                          studentID:
+                                              (BlocProvider.of<LoginBloc>(context)
+                                                      .state as LoggedInState)
+                                                  .student
+                                                  .id,
+                                          token: (BlocProvider.of<LoginBloc>(context)
+                                                  .state as LoggedInState)
+                                              .student
+                                              .token,
                                           undergraduateDetails: UndergraduateDetails(
                                               university: universityController
                                                   .text
                                                   .trim(),
-                                              universityId:
+                                              universityID:
                                                   universityIdController.text
                                                       .trim(),
                                               universityEmail:
@@ -155,11 +166,8 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
                                                   courseController.text.trim(),
                                               batch:
                                                   batchController.text.trim(),
-                                              backlogs: backlogsController.text
-                                                  .trim(),
-                                              currentCgpa: currentCgpaController
-                                                  .text
-                                                  .trim())))
+                                              backlogs: int.parse(backlogsController.text.trim()),
+                                              currentCgpa: currentCgpaController.text.trim())))
                                   : null;
                             },
                             onUndo: () {

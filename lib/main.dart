@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
-import './screens/drives_screen.dart';
 import './themes/theme_manager.dart';
 import 'bloc/details_blocs/contact_details_bloc.dart';
 import 'bloc/details_blocs/intermediate_school_details_bloc.dart';
 import 'bloc/details_blocs/metric_school_details_bloc.dart';
 import 'bloc/details_blocs/personal_details_bloc.dart';
 import 'bloc/details_blocs/undergraduate_details_bloc.dart';
+import 'bloc/login_bloc.dart';
+import 'screens/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,21 +43,17 @@ class _MyAppState extends State<MyApp> {
     }
     return MultiBlocProvider(
       providers: [
+        BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
         BlocProvider<ContactDetailsBloc>(
-          create: (context) => ContactDetailsBloc(),
-        ),
+            create: (context) => ContactDetailsBloc()),
         BlocProvider<PersonalDetailsBloc>(
-          create: (context) => PersonalDetailsBloc(),
-        ),
+            create: (context) => PersonalDetailsBloc()),
         BlocProvider<UndergraduateDetailsBloc>(
-          create: (context) => UndergraduateDetailsBloc(),
-        ),
+            create: (context) => UndergraduateDetailsBloc()),
         BlocProvider<MetricSchoolDetailsBloc>(
-          create: (context) => MetricSchoolDetailsBloc(),
-        ),
+            create: (context) => MetricSchoolDetailsBloc()),
         BlocProvider<IntermediateSchoolDetailsBloc>(
-          create: (context) => IntermediateSchoolDetailsBloc(),
-        ),
+            create: (context) => IntermediateSchoolDetailsBloc()),
       ],
       child: MaterialApp(
         title: 'The College Placement Application',
@@ -75,7 +72,7 @@ class _MyAppState extends State<MyApp> {
             TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
           }),
         ),
-        home: const DrivesScreen(),
+        home: const LoginScreen(),
       ),
     );
   }
