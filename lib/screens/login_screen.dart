@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../bloc/drive_bloc.dart';
+import '../bloc/drive_events.dart';
 import '../bloc/login_bloc.dart';
 import '../bloc/login_bloc_states.dart';
 import '../bloc/login_events.dart';
@@ -24,9 +26,13 @@ class _LoginScreenState extends State<LoginScreen> {
             previous is LoggingInState && current is LoggedInState,
         listener: (context, state) => {
               if (state is LoggedInState)
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const DrivesScreen(),
-                ))
+                {
+                  BlocProvider.of<DriveBloc>(context)
+                      .add(const FetchDrivesEvent(driveID: null)),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const DrivesScreen(),
+                  ))
+                }
             },
         builder: (context, state) {
           return Scaffold(

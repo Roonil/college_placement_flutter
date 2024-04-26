@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 class DriveTileName extends StatelessWidget {
-  final String imageURL, companyName, driveType, companyID;
+  final String companyName, driveType, companyID;
+  final String? imageURL;
   const DriveTileName({
     required this.companyName,
     required this.driveType,
@@ -22,7 +25,8 @@ class DriveTileName extends StatelessWidget {
             child: Image(
               width: 80,
               height: 65,
-              image: AssetImage(imageURL),
+              image: NetworkImage(
+                  imageURL != null ? "${hostName}D-$companyID-logo.jpg" : ""),
               fit: BoxFit.fill,
             ),
           ),

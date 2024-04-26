@@ -10,6 +10,7 @@ import 'bloc/details_blocs/intermediate_school_details_bloc.dart';
 import 'bloc/details_blocs/metric_school_details_bloc.dart';
 import 'bloc/details_blocs/personal_details_bloc.dart';
 import 'bloc/details_blocs/undergraduate_details_bloc.dart';
+import 'bloc/drive_bloc.dart';
 import 'bloc/login_bloc.dart';
 import 'screens/login_screen.dart';
 
@@ -54,6 +55,7 @@ class _MyAppState extends State<MyApp> {
             create: (context) => MetricSchoolDetailsBloc()),
         BlocProvider<IntermediateSchoolDetailsBloc>(
             create: (context) => IntermediateSchoolDetailsBloc()),
+        BlocProvider<DriveBloc>(create: (context) => DriveBloc()),
       ],
       child: MaterialApp(
         title: 'The College Placement Application',

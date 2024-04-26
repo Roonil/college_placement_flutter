@@ -3,7 +3,6 @@ class Company {
       companyID,
       driveType,
       timeLeft,
-      imageURL,
       startedAtTime,
       details,
       eligibilityCriteria,
@@ -12,6 +11,8 @@ class Company {
       location,
       package,
       bond;
+
+  final String? imageURL;
   final List<String> roles, process;
   final int numRegistrations;
   final bool hasRegistered;
