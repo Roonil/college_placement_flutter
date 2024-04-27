@@ -12,9 +12,13 @@ import '../../../bloc/details_blocs/contact_details_states.dart';
 import '../details_subtitle.dart';
 
 class ContactDetailsCard extends StatefulWidget {
-  const ContactDetailsCard({super.key, required this.expansionTileController});
+  const ContactDetailsCard(
+      {super.key,
+      required this.expansionTileController,
+      required this.onEdited});
   final ExpansionTileController expansionTileController;
 
+  final Function(bool) onEdited;
   @override
   State<ContactDetailsCard> createState() => _ContactDetailsCardState();
 }
@@ -57,6 +61,7 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
           previousPhoneNumber = phoneNumberController.text.trim();
           previousAddressLine2 = addressLine2Controller.text.trim();
           previousAddressLine1 = addressLine1Controller.text.trim();
+          widget.onEdited(false);
         }
       },
       buildWhen: (previous, current) =>
@@ -132,15 +137,11 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                           : null;
                     },
                     onUndo: () {
-                      setState(() {
-                        emailAddressController.text =
-                            previousEmailAddress ?? "";
-                        phoneNumberController.text = previousPhoneNumber ?? "";
-                        addressLine1Controller.text =
-                            previousAddressLine1 ?? "";
-                        addressLine2Controller.text =
-                            previousAddressLine2 ?? "";
-                      });
+                      emailAddressController.text = previousEmailAddress ?? "";
+                      phoneNumberController.text = previousPhoneNumber ?? "";
+                      addressLine1Controller.text = previousAddressLine1 ?? "";
+                      addressLine2Controller.text = previousAddressLine2 ?? "";
+                      widget.onEdited(false);
                     },
                     shouldShowButtons: shouldShowButtons,
                   ),
@@ -176,7 +177,17 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                                 inputsEnabled:
                                     state is! UpdatingContactDetailsState,
                                 formKey: formKey,
-                                onChanged: (_) => setState(() {}),
+                                onChanged: (_) {
+                                  isEdited = previousEmailAddress !=
+                                          emailAddressController.text.trim() ||
+                                      previousPhoneNumber !=
+                                          phoneNumberController.text.trim() ||
+                                      previousAddressLine2 !=
+                                          addressLine2Controller.text.trim() ||
+                                      previousAddressLine1 !=
+                                          addressLine1Controller.text.trim();
+                                  widget.onEdited(isEdited);
+                                },
                               )),
                   ],
                 ),

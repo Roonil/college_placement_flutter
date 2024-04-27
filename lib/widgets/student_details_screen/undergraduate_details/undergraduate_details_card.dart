@@ -13,9 +13,11 @@ import './undergraduate_details_inputs.dart';
 
 class UndergraduateDetailsCard extends StatefulWidget {
   const UndergraduateDetailsCard(
-      {super.key, required this.expansionTileController});
+      {super.key,
+      required this.expansionTileController,
+      required this.onEdited});
   final ExpansionTileController expansionTileController;
-
+  final Function(bool) onEdited;
   @override
   State<UndergraduateDetailsCard> createState() =>
       _UndergraduateDetailsCardState();
@@ -81,6 +83,7 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
           previousBatch = batchController.text.trim();
           previousBacklogs = backlogsController.text.trim();
           previousCurrentCgpa = currentCgpaController.text.trim();
+          widget.onEdited(false);
         }
       },
       buildWhen: (previous, current) =>
@@ -171,24 +174,22 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
                                   : null;
                             },
                             onUndo: () {
-                              setState(() {
-                                universityController.text =
-                                    previousUniversity ?? "";
-                                universityIdController.text =
-                                    previousUniversityId ?? "";
-                                universityEmailController.text =
-                                    previousUniversityEmail ?? "";
-                                degreeController.text = previousDegree ?? "";
-                                courseController.text = previousCourse ?? "";
+                              universityController.text =
+                                  previousUniversity ?? "";
+                              universityIdController.text =
+                                  previousUniversityId ?? "";
+                              universityEmailController.text =
+                                  previousUniversityEmail ?? "";
+                              degreeController.text = previousDegree ?? "";
+                              courseController.text = previousCourse ?? "";
 
-                                backlogsController.text =
-                                    previousBacklogs ?? "";
+                              backlogsController.text = previousBacklogs ?? "";
 
-                                batchController.text = previousBatch ?? "";
+                              batchController.text = previousBatch ?? "";
 
-                                currentCgpaController.text =
-                                    previousCurrentCgpa ?? "";
-                              });
+                              currentCgpaController.text =
+                                  previousCurrentCgpa ?? "";
+                              widget.onEdited(false);
                             },
                             shouldShowButtons: shouldShowButtons,
                           ),
@@ -239,7 +240,33 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
                                         inputsEnabled: state
                                             is! UpdatingUndergraduateDetailsState,
                                         formKey: formKey,
-                                        onChanged: (_) => setState(() {}),
+                                        onChanged: (_) {
+                                          isEdited = previousUniversity !=
+                                                  universityController.text
+                                                      .trim() ||
+                                              previousUniversityId !=
+                                                  universityIdController.text
+                                                      .trim() ||
+                                              previousUniversityEmail !=
+                                                  universityEmailController.text
+                                                      .trim() ||
+                                              previousDegree !=
+                                                  degreeController.text
+                                                      .trim() ||
+                                              previousCourse !=
+                                                  courseController.text
+                                                      .trim() ||
+                                              previousBatch !=
+                                                  batchController.text.trim() ||
+                                              previousBacklogs !=
+                                                  backlogsController.text
+                                                      .trim() ||
+                                              previousCurrentCgpa !=
+                                                  currentCgpaController.text
+                                                      .trim();
+
+                                          widget.onEdited(isEdited);
+                                        },
                                       )),
                             //             Padding(
                             //               padding: const EdgeInsets.symmetric(

@@ -27,7 +27,7 @@ class DriveTileName extends StatelessWidget {
               height: 65,
               image: NetworkImage(
                   imageURL != null ? "${hostName}D-$companyID-logo.jpg" : ""),
-              fit: BoxFit.fill,
+              fit: BoxFit.contain,
             ),
           ),
         ),

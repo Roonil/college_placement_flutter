@@ -13,8 +13,11 @@ import './intermediate_school_details_inputs.dart';
 
 class IntermediateSchoolDetailsCard extends StatefulWidget {
   const IntermediateSchoolDetailsCard(
-      {super.key, required this.expansionTileController});
+      {super.key,
+      required this.expansionTileController,
+      required this.onEdited});
 
+  final Function(bool) onEdited;
   final ExpansionTileController expansionTileController;
 
   @override
@@ -69,6 +72,7 @@ class _IntermediateSchoolDetailsCardState
           previousSchoolCity = schoolCityController.text.trim();
           previousPercentageScore = percentageScoreController.text.trim();
           previousBoard = boardController.text.trim();
+          widget.onEdited(false);
         }
       },
       buildWhen: (previous, current) =>
@@ -144,14 +148,13 @@ class _IntermediateSchoolDetailsCardState
                           : null;
                     },
                     onUndo: () {
-                      setState(() {
-                        schoolNameController.text = previousSchoolName ?? "";
-                        schoolCityController.text = previousSchoolCity ?? "";
+                      schoolNameController.text = previousSchoolName ?? "";
+                      schoolCityController.text = previousSchoolCity ?? "";
 
-                        percentageScoreController.text =
-                            previousPercentageScore ?? "";
-                        boardController.text = previousBoard ?? "";
-                      });
+                      percentageScoreController.text =
+                          previousPercentageScore ?? "";
+                      boardController.text = previousBoard ?? "";
+                      widget.onEdited(false);
                     },
                     shouldShowButtons: shouldShowButtons,
                   ),
@@ -186,7 +189,18 @@ class _IntermediateSchoolDetailsCardState
                                 inputsEnabled: state
                                     is! UpdatingIntermediateSchoolDetailsState,
                                 formKey: formKey,
-                                onChanged: (_) => setState(() {}),
+                                onChanged: (_) {
+                                  isEdited = previousSchoolName !=
+                                          schoolNameController.text.trim() ||
+                                      previousSchoolCity !=
+                                          schoolCityController.text.trim() ||
+                                      previousPercentageScore !=
+                                          percentageScoreController.text
+                                              .trim() ||
+                                      previousBoard !=
+                                          boardController.text.trim();
+                                  widget.onEdited(isEdited);
+                                },
                               )),
                   ],
                 ),

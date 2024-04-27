@@ -46,10 +46,12 @@ class ThemeManager {
       scaffoldBackgroundColor: const Color.fromRGBO(20, 22, 34, 1),
       colorScheme: darkThemeData.colorScheme,
       appBarTheme: AppBarTheme(
-          backgroundColor: primaryColor, foregroundColor: Colors.white),
+        backgroundColor: primaryColor,
+      ),
       chipTheme: baseThemeData.chipTheme.copyWith(
         side: const BorderSide(color: Colors.transparent),
         backgroundColor: secondaryColor,
+        selectedColor: secondaryColor,
         selectedShadowColor: primaryColor,
         labelStyle: const TextStyle(color: Colors.white),
         iconTheme:

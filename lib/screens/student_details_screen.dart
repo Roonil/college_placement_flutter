@@ -7,7 +7,11 @@ import '../widgets/student_details_screen/contact_details/contact_details_card.d
 import '../widgets/student_details_screen/personal_details/personal_details_card.dart';
 
 class StudentDetailsScreen extends StatefulWidget {
-  const StudentDetailsScreen({super.key});
+  final int selectedResumeIdx, selectedRoleIdx;
+  const StudentDetailsScreen(
+      {super.key,
+      required this.selectedRoleIdx,
+      required this.selectedResumeIdx});
 
   @override
   State<StudentDetailsScreen> createState() => _StudentDetailsScreenState();
@@ -27,11 +31,36 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       intermediateSchoolDetailsExpansionTileController =
       ExpansionTileController();
 
+  bool personalDetailsEdited = false,
+      contactDetailsEdited = false,
+      undergraduateDetailsEdited = false,
+      intermediateDetailsEdited = false,
+      matricDetailsEdited = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Verify Details"),
+        actions: [
+          TextButton(
+              style: TextButton.styleFrom(
+                  disabledBackgroundColor: Colors.grey.withAlpha(150)),
+              onPressed: personalDetailsEdited ||
+                      contactDetailsEdited ||
+                      undergraduateDetailsEdited ||
+                      intermediateDetailsEdited ||
+                      matricDetailsEdited
+                  ? null
+                  : () {},
+              child: Text(
+                "Continue",
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: Colors.white),
+              ))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -43,6 +72,9 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                   child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: PersonalDetailsCard(
+                  onEdited: (value) => setState(() {
+                    personalDetailsEdited = value;
+                  }),
                   expansionTileController:
                       personalDetailsExpansionTileController,
                 ),
@@ -51,6 +83,9 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                   child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ContactDetailsCard(
+                    onEdited: (value) => setState(() {
+                          contactDetailsEdited = value;
+                        }),
                     expansionTileController:
                         contactDetailsExpansionTileController),
               )),
@@ -58,6 +93,9 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                   child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: UndergraduateDetailsCard(
+                  onEdited: (value) => setState(() {
+                    undergraduateDetailsEdited = value;
+                  }),
                   expansionTileController:
                       undergraduateDetailsExpansionTileController,
                 ),
@@ -66,6 +104,9 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                   child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: IntermediateSchoolDetailsCard(
+                  onEdited: (value) => setState(() {
+                    intermediateDetailsEdited = value;
+                  }),
                   expansionTileController:
                       intermediateSchoolDetailsExpansionTileController,
                 ),
@@ -74,15 +115,13 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                   child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: MetricSchoolDetailsCard(
+                  onEdited: (value) => setState(() {
+                    matricDetailsEdited = value;
+                  }),
                   expansionTileController:
                       metricSchoolDetailsExpansionTileController,
                 ),
               )),
-              Flexible(
-                  child: TextButton(
-                child: const Text("Register"),
-                onPressed: () {},
-              ))
             ],
           ),
         ),

@@ -64,7 +64,7 @@ class DriveBloc extends Bloc<DriveEvent, DriveState> {
                 .map((position) => position.toString())
                 .toList(),
             process: [drive['placement_process']],
-            numRegistrations: 100,
+            numRegistrations: drive['_count']['participants'],
             hasRegistered: false));
 
         //TODO:Fix hasRegistered and numRegistrations

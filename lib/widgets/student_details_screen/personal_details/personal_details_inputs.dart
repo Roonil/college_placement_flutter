@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 
 import '../../../bloc/details_blocs/personal_details_bloc.dart';
 import '../../../bloc/details_blocs/personal_details_events.dart';
+import '../../../bloc/login_bloc.dart';
+import '../../../bloc/login_bloc_states.dart';
 import '../../../models/personal_details.dart';
 
 class PersonalDetailsInputs extends StatelessWidget {
@@ -170,7 +172,15 @@ class PersonalDetailsInputs extends StatelessWidget {
                     isEdited
                 ? BlocProvider.of<PersonalDetailsBloc>(context).add(
                     UpdatePersonalDetailsEvent(
-                        studentID: "1",
+                        token: (BlocProvider.of<LoginBloc>(context).state
+                                as LoggedInState)
+                            .student
+                            .token,
+                        //TODO: Sync Student details from logged in details
+                        studentID: (BlocProvider.of<LoginBloc>(context).state
+                                as LoggedInState)
+                            .student
+                            .id,
                         personalDetails: PersonalDetails(
                             dateOfBirth: dateOfBirthController.text.trim(),
                             firstName: firstNameController.text.trim(),

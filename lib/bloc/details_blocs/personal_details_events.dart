@@ -19,8 +19,11 @@ class FetchPersonalDetailsEvent implements ContactDetailsEvent {
 
 @immutable
 class UpdatePersonalDetailsEvent implements ContactDetailsEvent {
-  final String studentID;
+  final int studentID;
+  final String token;
   final PersonalDetails personalDetails;
   const UpdatePersonalDetailsEvent(
-      {required this.studentID, required this.personalDetails});
+      {required this.studentID,
+      required this.personalDetails,
+      required this.token});
 }

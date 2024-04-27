@@ -5,15 +5,20 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../../bloc/details_blocs/personal_details_bloc.dart';
 import '../../../bloc/details_blocs/personal_details_events.dart';
 import '../../../bloc/details_blocs/personal_details_states.dart';
+import '../../../bloc/login_bloc.dart';
+import '../../../bloc/login_bloc_states.dart';
 import '../../../models/personal_details.dart';
 import '../details_subtitle.dart';
 import './personal_details_inputs.dart';
 
 class PersonalDetailsCard extends StatefulWidget {
-  const PersonalDetailsCard({super.key, required this.expansionTileController});
+  const PersonalDetailsCard(
+      {super.key,
+      required this.expansionTileController,
+      required this.onEdited});
 
   final ExpansionTileController expansionTileController;
-
+  final Function(bool) onEdited;
   @override
   State<PersonalDetailsCard> createState() => _PersonalDetailsCardState();
 }
@@ -30,6 +35,7 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
       previousNationality;
 
   bool shouldShowButtons = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PersonalDetailsBloc, PersonalDetailsState>(
@@ -53,6 +59,8 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
           previousLastName = lastNameController.text.trim();
           previousDateOfBirth = dateOfBirthController.text.trim();
           previousNationality = nationalityController.text.trim();
+
+          widget.onEdited(false);
         }
       },
       buildWhen: (previous, current) =>
@@ -68,6 +76,7 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
             previousLastName != lastNameController.text.trim() ||
             previousDateOfBirth != dateOfBirthController.text.trim() ||
             previousNationality != nationalityController.text.trim();
+
         return Card(
           elevation: 4,
           child: ClipRRect(
@@ -103,8 +112,15 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
                       formKey.currentState!.validate() && isEdited
                           ? BlocProvider.of<PersonalDetailsBloc>(context).add(
                               UpdatePersonalDetailsEvent(
-                                  //TODO: Sync Student details from logged in details
-                                  studentID: "1",
+                                  token: (BlocProvider.of<LoginBloc>(context)
+                                          .state as LoggedInState)
+                                      .student
+                                      .token,
+                                  studentID:
+                                      (BlocProvider.of<LoginBloc>(context).state
+                                              as LoggedInState)
+                                          .student
+                                          .id,
                                   personalDetails: PersonalDetails(
                                       dateOfBirth:
                                           dateOfBirthController.text.trim(),
@@ -116,12 +132,11 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
                           : null;
                     },
                     onUndo: () {
-                      setState(() {
-                        firstNameController.text = previousFirstName ?? "";
-                        lastNameController.text = previousLastName ?? "";
-                        dateOfBirthController.text = previousDateOfBirth ?? "";
-                        nationalityController.text = previousNationality ?? "";
-                      });
+                      firstNameController.text = previousFirstName ?? "";
+                      lastNameController.text = previousLastName ?? "";
+                      dateOfBirthController.text = previousDateOfBirth ?? "";
+                      nationalityController.text = previousNationality ?? "";
+                      widget.onEdited(false);
                     },
                     shouldShowButtons: shouldShowButtons,
                   ),
@@ -154,7 +169,18 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
                                 inputsEnabled:
                                     state is! UpdatingPersonalDetailsState,
                                 formKey: formKey,
-                                onChanged: (_) => setState(() {}),
+                                onChanged: (value) {
+                                  // setState(() {});
+                                  isEdited = previousFirstName !=
+                                          firstNameController.text.trim() ||
+                                      previousLastName !=
+                                          lastNameController.text.trim() ||
+                                      previousDateOfBirth !=
+                                          dateOfBirthController.text.trim() ||
+                                      previousNationality !=
+                                          nationalityController.text.trim();
+                                  widget.onEdited(isEdited);
+                                },
                               )),
                   ],
                 ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/company.dart';
 import '../../screens/drive_details_screen.dart';
 import '../drive_tile_name.dart';
-import './roles_chip_builder.dart';
+import '../roles_chip_builder.dart';
 
 class DriveTile extends StatelessWidget {
   final Company company;
@@ -53,6 +53,8 @@ class DriveTile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: RolesChipBuilder(
+                  selectedIdx: null,
+                  onTap: null,
                   roles: company.roles,
                 ),
               ),

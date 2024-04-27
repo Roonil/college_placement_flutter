@@ -22,18 +22,16 @@ class FilterFunctions {
       case FilterType.onlineDriveType:
         return initialCompanies
             .where((company) =>
-                company.driveType == "Online" ||
-                company.driveType == "Online/On Campus")
+                company.driveType == "Online" || company.driveType == "Hybrid")
             .toSet();
       case FilterType.offlineDriveType:
         return initialCompanies
             .where((company) =>
-                company.driveType == "On Campus" ||
-                company.driveType == "Online/On Campus")
+                company.driveType == "Offline" || company.driveType == "Hybrid")
             .toSet();
       case FilterType.hybridDriveType:
         return initialCompanies
-            .where((company) => company.driveType == "Online/On Campus")
+            .where((company) => company.driveType == "Hybrid")
             .toSet();
       case FilterType.clearDriveType:
         return initialCompanies;

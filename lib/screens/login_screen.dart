@@ -6,6 +6,8 @@ import '../bloc/drive_events.dart';
 import '../bloc/login_bloc.dart';
 import '../bloc/login_bloc_states.dart';
 import '../bloc/login_events.dart';
+import '../bloc/resume_bloc.dart';
+import '../bloc/resume_events.dart';
 import 'drives_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,6 +31,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 {
                   BlocProvider.of<DriveBloc>(context)
                       .add(const FetchDrivesEvent(driveID: null)),
+                  BlocProvider.of<ResumeBloc>(context).add(FetchResumesEvent(
+                      studentID: (BlocProvider.of<LoginBloc>(context).state
+                              as LoggedInState)
+                          .student
+                          .id)),
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => const DrivesScreen(),
                   ))
