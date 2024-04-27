@@ -70,7 +70,7 @@ class ThemeManager {
             appBarTheme:
                 darkTheme.appBarTheme.copyWith(foregroundColor: Colors.white),
             colorScheme: lightThemeData.colorScheme,
-            scaffoldBackgroundColor: Colors.white.withOpacity(0.95),
+            scaffoldBackgroundColor: Colors.white,
             cardTheme: lightThemeData.cardTheme.copyWith(elevation: 5),
             elevatedButtonTheme: darkTheme.elevatedButtonTheme,
             chipTheme: darkTheme.chipTheme,

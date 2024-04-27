@@ -96,7 +96,7 @@ class ContactDetailsInputs extends StatelessWidget {
                                 : null,
                         decoration: InputDecoration(
                             contentPadding: const EdgeInsets.all(8),
-                            label: const Text("Address Line 1"),
+                            label: const Text("Current Address"),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20))),
                       ),
@@ -112,7 +112,7 @@ class ContactDetailsInputs extends StatelessWidget {
                         keyboardType: TextInputType.streetAddress,
                         decoration: InputDecoration(
                             contentPadding: const EdgeInsets.all(8),
-                            label: const Text("Address Line 2"),
+                            label: const Text("Permanent Address"),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20))),
                       ),

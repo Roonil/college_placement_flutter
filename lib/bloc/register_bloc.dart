@@ -19,7 +19,6 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       ApplyToDriveEvent event, Emitter<RegisterState> emit) async {
     emit(const RegisteringDriveState(isLoading: true, authError: null));
 
-    //TODO: Add API Calls
     try {
       final http.Response resp = await http
           .post(Uri.parse(registerForDriveURL),
@@ -47,13 +46,9 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
             isLoading: false,
             authError: HttpException("Registration Failed!")));
       }
-    } catch (e) {
-      print(e);
+    } catch (_) {
       emit(const DriveRegisterFailedState(
           isLoading: false, authError: HttpException("An Error occured!")));
     }
-
-    // await Future.delayed(const Duration(seconds: 2)).then((value) =>
-    //     emit(const RegisteredDriveState(isLoading: false, authError: null)));
   }
 }

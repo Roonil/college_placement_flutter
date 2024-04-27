@@ -57,7 +57,11 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
             (previous is RegisteringDriveState &&
                 current is DriveRegisterFailedState),
         listener: (context, state) {
-          if (state is RegisteredDriveState) {
+          if (state is DriveRegisterFailedState) {
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(state.authError.toString().split(": ")[1])));
+          } else if (state is RegisteredDriveState) {
             BlocProvider.of<DriveBloc>(context).add(FetchDrivesEvent(
                 driveID: null,
                 token:
@@ -72,6 +76,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
             Navigator.of(context).popUntil(
               (route) => route.isFirst,
             );
+            ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content:
                     Text('Successfully Registered for ${widget.driveName}!')));

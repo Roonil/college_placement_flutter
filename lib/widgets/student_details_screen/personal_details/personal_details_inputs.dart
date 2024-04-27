@@ -172,11 +172,10 @@ class PersonalDetailsInputs extends StatelessWidget {
                     isEdited
                 ? BlocProvider.of<PersonalDetailsBloc>(context).add(
                     UpdatePersonalDetailsEvent(
-                        token: (BlocProvider.of<LoginBloc>(context).state
-                                as LoggedInState)
+                        token: (BlocProvider.of<LoginBloc>(context)
+                                .state as LoggedInState)
                             .student
                             .token,
-                        //TODO: Sync Student details from logged in details
                         studentID: (BlocProvider.of<LoginBloc>(context).state
                                 as LoggedInState)
                             .student

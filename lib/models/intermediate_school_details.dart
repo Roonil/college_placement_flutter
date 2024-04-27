@@ -1,5 +1,6 @@
 class IntermediateSchoolDetails {
-  final String schoolName, schoolCity, percentageScore, board;
+  final String schoolName, schoolCity, board;
+  final double percentageScore;
 
   IntermediateSchoolDetails({
     required this.schoolName,

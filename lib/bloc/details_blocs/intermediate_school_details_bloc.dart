@@ -22,8 +22,6 @@ class IntermediateSchoolDetailsBloc
     emit(const FetchingIntermediateSchoolDetailsState(
         isLoading: true, authError: null));
 
-    //TODO: Check response body
-
     try {
       final http.Response resp = await http.get(
           Uri.parse("$getDetailsURL?type=id&id=${event.studentID}"),
@@ -42,7 +40,7 @@ class IntermediateSchoolDetailsBloc
             .then((_) => emit(FetchedIntermediateSchoolDetailsState(
                 intermediateSchoolDetails: IntermediateSchoolDetails(
                     board: jsonBodyData['hsc_board'] ?? "",
-                    percentageScore: jsonBodyData['hsc_result'].toString(),
+                    percentageScore: jsonBodyData['hsc_result'] ?? 0,
                     schoolCity: jsonBodyData['hsc_city'] ?? "",
                     schoolName: jsonBodyData['hsc_school_name'] ?? ""),
                 isLoading: false,
@@ -63,7 +61,6 @@ class IntermediateSchoolDetailsBloc
     emit(const UpdatingIntermediateSchoolDetailsState(
         isLoading: true, authError: null));
 
-    //TODO: Check body
     final body = <String, dynamic>{};
 
     body['hsc_board'] = event.intermediateSchoolDetails.board;
@@ -71,8 +68,6 @@ class IntermediateSchoolDetailsBloc
     body['hsc_school_name'] = event.intermediateSchoolDetails.schoolName;
     body['hsc_result'] =
         event.intermediateSchoolDetails.percentageScore.toString();
-
-    // body['medium,pasingYear'] = event.metricSchoolDetails.schoolCity;
 
     try {
       final http.Response resp = await http
@@ -85,7 +80,6 @@ class IntermediateSchoolDetailsBloc
             const Duration(seconds: 10),
             onTimeout: () => http.Response('Error', 408),
           );
-//TODO:Updation still shows pending changes
       if (resp.statusCode == 200) {
         await Future.delayed(const Duration(seconds: 0, milliseconds: 500))
             .then((_) => emit(UpdatedIntermediateSchoolDetailsState(

@@ -22,8 +22,6 @@ class ContactDetailsBloc
       FetchContactDetailsEvent event, Emitter<ContactDetailsState> emit) async {
     emit(const FetchingContactDetailsState(isLoading: true, authError: null));
 
-    //TODO: Check response body
-
     try {
       final http.Response resp = await http.get(
           Uri.parse("$getDetailsURL?type=id&id=${event.studentID}"),
@@ -41,8 +39,8 @@ class ContactDetailsBloc
         await Future.delayed(const Duration(seconds: 0, milliseconds: 500))
             .then((_) => emit(FetchedContactDetailsState(
                 contactDetails: ContactDetails(
-                  addressLine1: jsonBodyData['current_address'] ?? "",
-                  addressLine2: jsonBodyData['permanent_address'] ?? "",
+                  currentAddress: jsonBodyData['current_address'] ?? "",
+                  permanentAddress: jsonBodyData['permanent_address'] ?? "",
                   emailAddress: jsonBodyData['personal_email'] ?? "",
                   phoneNumber: jsonBodyData['contact_number'] ?? "",
                 ),
@@ -62,17 +60,12 @@ class ContactDetailsBloc
       Emitter<ContactDetailsState> emit) async {
     emit(const UpdatingContactDetailsState(isLoading: true, authError: null));
 
-    //TODO: Check body
     final body = <String, dynamic>{};
 
     body['personal_email'] = event.contactDetails.emailAddress;
     body['contact_number'] = event.contactDetails.phoneNumber;
-    body['current_address'] = event.contactDetails.addressLine1;
-    body['permanent_address'] = event.contactDetails.addressLine2;
-    // body['university'] = event.undergraduateDetails.university;
-    // body['university_email'] = event.undergraduateDetails.universityEmail;
-    // body['uid'] = event.undergraduateDetails.universityID;
-    // body['number_of_backlogs'] = event.undergraduateDetails.backlogs.toString();
+    body['current_address'] = event.contactDetails.currentAddress;
+    body['permanent_address'] = event.contactDetails.permanentAddress;
 
     try {
       final http.Response resp = await http
@@ -92,7 +85,6 @@ class ContactDetailsBloc
                 contactDetails: event.contactDetails,
                 isLoading: false,
                 authError: null)));
-//TODO: Updating shows pending changes.
       } else {
         emit(const ContactDetailsUpdateFailedState(
             isLoading: false, authError: HttpException("Fetching Failed!")));

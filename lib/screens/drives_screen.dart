@@ -11,7 +11,6 @@ import '../models/company.dart';
 import '../widgets/drives_screen/drive_tile.dart';
 import '../widgets/drives_screen/filter_builder.dart';
 import '../widgets/drives_screen/filter_functions.dart';
-import 'settings_screen.dart';
 
 class DrivesScreen extends StatefulWidget {
   const DrivesScreen({
@@ -42,7 +41,18 @@ class _DrivesScreenState extends State<DrivesScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DriveBloc, DriveState>(
-        listener: (context, state) {},
+        listenWhen: (previous, current) =>
+            previous is FetchingDrivesState &&
+            current is DrivesFetchFailedState,
+        listener: (context, state) {
+          (state is DrivesFetchFailedState)
+              ? {
+                  ScaffoldMessenger.of(context).clearSnackBars(),
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(state.authError.toString().split(": ")[1])))
+                }
+              : null;
+        },
         buildWhen: (previous, current) =>
             (previous is FetchingDrivesState &&
                 current is FetchedDrivesState) ||
@@ -53,13 +63,6 @@ class _DrivesScreenState extends State<DrivesScreen> {
             appBar: AppBar(
               title: const Text("Ongoing Drives"),
               actions: [
-                IconButton(
-                    onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const SettingsScreen(),
-                          ),
-                        ),
-                    icon: const Icon(Icons.settings)),
                 IconButton(
                   onPressed: () => Theme.of(context).colorScheme.brightness ==
                           Brightness.dark
@@ -80,7 +83,6 @@ class _DrivesScreenState extends State<DrivesScreen> {
                 ? Drawer(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      //TODO: Show filter sub-menu on side on Desktops
                       child: FilterBuilder(
                           filters: filters,
                           applyFilterCallBack: (filterType) {
@@ -169,7 +171,6 @@ class _DrivesScreenState extends State<DrivesScreen> {
                                             builder: (context) => Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
-                                              //TODO: Show filter sub-menu on side on Desktops
                                               child: FilterBuilder(
                                                   filters: filters,
                                                   applyFilterCallBack:
@@ -209,17 +210,6 @@ class _DrivesScreenState extends State<DrivesScreen> {
                                   ),
                                 )
                                 //TODO: Add clear filters button
-
-                                // Expanded(
-                                //   child: FilterBuilder(
-                                //       filters: filters,
-                                //       onTap: (filterType) {
-                                //         setState(() {
-                                //           filteredCompanies = FilterFunctions.applyFilters(
-                                //               companies: companies, filterType: filterType);
-                                //         });
-                                //       }),
-                                // )
                               ],
                             ),
                           ),

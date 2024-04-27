@@ -45,13 +45,22 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
           (previous is FetchingContactDetailsState &&
               current is FetchedContactDetailsState) ||
           (previous is UpdatingContactDetailsState &&
-              current is UpdatedContactDetailsState),
+              current is UpdatedContactDetailsState) ||
+          (previous is FetchingContactDetailsState &&
+              current is ContactDetailsFetchFailedState) ||
+          (previous is UpdatingContactDetailsState &&
+              current is ContactDetailsUpdateFailedState),
       listener: (context, state) {
-        if (state is FetchedContactDetailsState) {
+        if (state is ContactDetailsFetchFailedState ||
+            state is ContactDetailsUpdateFailedState) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.authError.toString().split(": ")[1])));
+        } else if (state is FetchedContactDetailsState) {
           emailAddressController.text = state.contactDetails.emailAddress;
           phoneNumberController.text = state.contactDetails.phoneNumber;
-          addressLine1Controller.text = state.contactDetails.addressLine1;
-          addressLine2Controller.text = state.contactDetails.addressLine2;
+          addressLine1Controller.text = state.contactDetails.currentAddress;
+          addressLine2Controller.text = state.contactDetails.permanentAddress;
           previousEmailAddress = emailAddressController.text.trim();
           previousPhoneNumber = phoneNumberController.text.trim();
           previousAddressLine2 = addressLine2Controller.text.trim();
@@ -114,7 +123,6 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                       formKey.currentState!.validate() && isEdited
                           ? BlocProvider.of<ContactDetailsBloc>(context).add(
                               UpdateContactDetailsEvent(
-                                  //TODO: Sync Student details from logged in details
                                   studentID:
                                       (BlocProvider.of<LoginBloc>(context).state
                                               as LoggedInState)
@@ -129,9 +137,9 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                                         emailAddressController.text.trim(),
                                     phoneNumber:
                                         phoneNumberController.text.trim(),
-                                    addressLine2:
+                                    permanentAddress:
                                         addressLine2Controller.text.trim(),
-                                    addressLine1:
+                                    currentAddress:
                                         addressLine1Controller.text.trim(),
                                   )))
                           : null;

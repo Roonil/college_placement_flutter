@@ -52,10 +52,19 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
       listenWhen: (previous, current) =>
           (previous is FetchingUndergraduateDetailsState &&
               current is FetchedUndergraduateDetailsState) ||
-          previous is UpdatingUndergraduateDetailsState &&
-              current is UpdatedUndergraduateDetailsState,
+          (previous is UpdatingUndergraduateDetailsState &&
+              current is UpdatedUndergraduateDetailsState) ||
+          (previous is FetchingUndergraduateDetailsState &&
+              current is UndergraduateDetailsFetchFailedState) ||
+          (previous is UpdatingUndergraduateDetailsState &&
+              current is UndergraduateDetailsUpdateFailedState),
       listener: (context, state) {
-        if (state is FetchedUndergraduateDetailsState) {
+        if (state is UndergraduateDetailsFetchFailedState ||
+            state is UndergraduateDetailsUpdateFailedState) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.authError.toString().split(": ")[1])));
+        } else if (state is FetchedUndergraduateDetailsState) {
           universityController.text = state.undergraduateDetails.university;
           universityIdController.text = state.undergraduateDetails.universityID;
           universityEmailController.text =
@@ -141,36 +150,29 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
                             isEdited: isEdited,
                             onSaved: () {
                               formKey.currentState!.validate() && isEdited
-                                  ? BlocProvider.of<UndergraduateDetailsBloc>(context)
-                                      .add(UpdateUndergraduateDetailsEvent(
-                                          //TODO: Sync Student details from logged in details
-                                          studentID:
-                                              (BlocProvider.of<LoginBloc>(context)
-                                                      .state as LoggedInState)
-                                                  .student
-                                                  .id,
-                                          token: (BlocProvider.of<LoginBloc>(context)
+                                  ? BlocProvider.of<UndergraduateDetailsBloc>(context).add(UpdateUndergraduateDetailsEvent(
+                                      studentID:
+                                          (BlocProvider.of<LoginBloc>(context)
                                                   .state as LoggedInState)
                                               .student
-                                              .token,
-                                          undergraduateDetails: UndergraduateDetails(
-                                              university: universityController
-                                                  .text
-                                                  .trim(),
-                                              universityID:
-                                                  universityIdController.text
-                                                      .trim(),
-                                              universityEmail:
-                                                  universityEmailController.text
-                                                      .trim(),
-                                              degree:
-                                                  degreeController.text.trim(),
-                                              course:
-                                                  courseController.text.trim(),
-                                              batch:
-                                                  batchController.text.trim(),
-                                              backlogs: int.parse(backlogsController.text.trim()),
-                                              currentCgpa: currentCgpaController.text.trim())))
+                                              .id,
+                                      token: (BlocProvider.of<LoginBloc>(context)
+                                              .state as LoggedInState)
+                                          .student
+                                          .token,
+                                      undergraduateDetails: UndergraduateDetails(
+                                          university:
+                                              universityController.text.trim(),
+                                          universityID: universityIdController
+                                              .text
+                                              .trim(),
+                                          universityEmail:
+                                              universityEmailController.text.trim(),
+                                          degree: degreeController.text.trim(),
+                                          course: courseController.text.trim(),
+                                          batch: batchController.text.trim(),
+                                          backlogs: int.parse(backlogsController.text.trim()),
+                                          currentCgpa: currentCgpaController.text.trim())))
                                   : null;
                             },
                             onUndo: () {

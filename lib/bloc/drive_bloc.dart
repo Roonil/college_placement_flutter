@@ -73,7 +73,13 @@ class DriveBloc extends Bloc<DriveEvent, DriveState> {
               package: drive['pay_package'],
               bond: drive['bond'],
               roles: (drive['positions'] as List<dynamic>)
-                  .map((position) => position.toString())
+                  .map((position) => position
+                      .toString()
+                      .split(RegExp(r"(?<=[a-z])(?=[A-Z])"))
+                      .fold(
+                          "",
+                          (previousValue, element) =>
+                              "$previousValue $element"))
                   .toList(),
               process: [drive['placement_process']],
               numRegistrations: drive['_count']['participants'],

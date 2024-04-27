@@ -22,8 +22,6 @@ class UndergraduateDetailsBloc
     emit(const FetchingUndergraduateDetailsState(
         isLoading: true, authError: null));
 
-    //TODO: Check response body
-
     try {
       final http.Response resp = await http.get(
           Uri.parse("$getDetailsURL?type=id&id=${event.studentID}"),
@@ -67,14 +65,13 @@ class UndergraduateDetailsBloc
     emit(const UpdatingUndergraduateDetailsState(
         isLoading: true, authError: null));
 
-    //TODO: Check body
     final body = <String, dynamic>{};
 
     body['batch'] = event.undergraduateDetails.batch;
     body['stream'] = event.undergraduateDetails.degree;
     body['course'] = event.undergraduateDetails.course;
     body['current_cgpa'] = event.undergraduateDetails.currentCgpa.toString();
-    // body['university'] = event.undergraduateDetails.university;
+
     body['university_email'] = event.undergraduateDetails.universityEmail;
     body['uid'] = event.undergraduateDetails.universityID;
     body['number_of_backlogs'] = event.undergraduateDetails.backlogs.toString();

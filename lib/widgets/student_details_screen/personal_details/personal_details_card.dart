@@ -43,9 +43,18 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
           (previous is FetchingPersonalDetailsState &&
               current is FetchedPersonalDetailsState) ||
           (previous is UpdatingPersonalDetailsState &&
-              current is UpdatedPersonalDetailsState),
+              current is UpdatedPersonalDetailsState) ||
+          (previous is FetchingPersonalDetailsState &&
+              current is PersonalDetailsFetchFailedState) ||
+          (previous is UpdatingPersonalDetailsState &&
+              current is PersonalDetailsUpdateFailedState),
       listener: (context, state) {
-        if (state is FetchedPersonalDetailsState) {
+        if (state is PersonalDetailsFetchFailedState ||
+            state is PersonalDetailsUpdateFailedState) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+
+          (SnackBar(content: Text(state.authError.toString().split(": ")[1])));
+        } else if (state is FetchedPersonalDetailsState) {
           firstNameController.text = state.personalDetails.firstName;
           lastNameController.text = state.personalDetails.lastName;
           dateOfBirthController.text = state.personalDetails.dateOfBirth;

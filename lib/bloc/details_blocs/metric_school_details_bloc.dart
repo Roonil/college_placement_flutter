@@ -22,8 +22,6 @@ class MetricSchoolDetailsBloc
     emit(const FetchingMetricSchoolDetailsState(
         isLoading: true, authError: null));
 
-//TODO: Check response body
-
     try {
       final http.Response resp = await http.get(
           Uri.parse("$getDetailsURL?type=id&id=${event.studentID}"),
@@ -63,7 +61,6 @@ class MetricSchoolDetailsBloc
     emit(const UpdatingMetricSchoolDetailsState(
         isLoading: true, authError: null));
 
-    //TODO: Check body
     final body = <String, dynamic>{};
 
     body['matric_board'] = event.metricSchoolDetails.board;
@@ -71,8 +68,6 @@ class MetricSchoolDetailsBloc
     body['matric_school_name'] = event.metricSchoolDetails.schoolName;
     body['matric_result'] =
         event.metricSchoolDetails.percentageScore.toString();
-
-    // body['medium,pasingYear'] = event.metricSchoolDetails.schoolCity;
 
     try {
       final http.Response resp = await http
@@ -85,7 +80,7 @@ class MetricSchoolDetailsBloc
             const Duration(seconds: 10),
             onTimeout: () => http.Response('Error', 408),
           );
-//TODO:Updation still shows pending changes
+
       if (resp.statusCode == 200) {
         await Future.delayed(const Duration(seconds: 0, milliseconds: 500))
             .then((_) => emit(UpdatedMetricSchoolDetailsState(

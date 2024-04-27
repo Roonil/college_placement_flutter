@@ -46,10 +46,19 @@ class _MetricSchoolDetailsCardState extends State<MetricSchoolDetailsCard> {
       listenWhen: (previous, current) =>
           (previous is FetchingMetricSchoolDetailsState &&
               current is FetchedMetricSchoolDetailsState) ||
-          previous is UpdatingMetricSchoolDetailsState &&
-              current is UpdatedMetricSchoolDetailsState,
+          (previous is UpdatingMetricSchoolDetailsState &&
+              current is UpdatedMetricSchoolDetailsState) ||
+          (previous is FetchingMetricSchoolDetailsState &&
+              current is MetricSchoolDetailsFetchFailedState) ||
+          (previous is UpdatingMetricSchoolDetailsState &&
+              current is MetricSchoolDetailsUpdateFailedState),
       listener: (context, state) {
-        if (state is FetchedMetricSchoolDetailsState) {
+        if (state is MetricSchoolDetailsFetchFailedState ||
+            state is MetricSchoolDetailsUpdateFailedState) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.authError.toString().split(": ")[1])));
+        } else if (state is FetchedMetricSchoolDetailsState) {
           schoolNameController.text = state.metricSchoolDetails.schoolName;
           schoolCityController.text = state.metricSchoolDetails.schoolCity;
 

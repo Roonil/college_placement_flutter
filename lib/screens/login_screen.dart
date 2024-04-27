@@ -25,9 +25,19 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
         listenWhen: (previous, current) =>
-            previous is LoggingInState && current is LoggedInState,
+            (previous is LoggingInState && current is LoggedInState) ||
+            (previous is LoggingInState && current is LoginFailedState),
         listener: (context, state) => {
-              if (state is LoggedInState)
+              if (state is LoginFailedState)
+                {
+                  ScaffoldMessenger.of(context).clearSnackBars(),
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(state.authError
+                          .toString()
+                          .split(": ")[1]
+                          .split(": ")[1])))
+                }
+              else if (state is LoggedInState)
                 {
                   BlocProvider.of<DriveBloc>(context).add(FetchDrivesEvent(
                       driveID: null,

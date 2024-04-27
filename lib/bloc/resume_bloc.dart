@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/src/media_type.dart' show MediaType;
+import 'package:http_parser/http_parser.dart' show MediaType;
 import '../constants.dart';
 import 'resume_events.dart';
 import 'resume_states.dart';
@@ -56,8 +56,7 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
 
       emit(FetchedResumesState(
           isLoading: false, resumes: resumes, authError: null));
-    } catch (e) {
-      print(e);
+    } catch (_) {
       emit(const ResumesFetchFailedState(
           isLoading: false, authError: HttpException("An Error occured!")));
     }
@@ -88,8 +87,6 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
         await Future.delayed(const Duration(seconds: 0, milliseconds: 500))
             .then((_) => emit(UpdatedResumeState(
                 isLoading: false, resumes: event.resumes, authError: null)));
-
-        print(event.resumes.keys);
       } else {
         emit(const ResumeUpdateFailedState(
             isLoading: false, authError: HttpException("Fetching Failed!")));

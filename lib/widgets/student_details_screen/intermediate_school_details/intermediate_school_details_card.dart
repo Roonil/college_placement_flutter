@@ -49,17 +49,26 @@ class _IntermediateSchoolDetailsCardState
       listenWhen: (previous, current) =>
           (previous is FetchingIntermediateSchoolDetailsState &&
               current is FetchedIntermediateSchoolDetailsState) ||
-          previous is UpdatingIntermediateSchoolDetailsState &&
-              current is UpdatedIntermediateSchoolDetailsState,
+          (previous is UpdatingIntermediateSchoolDetailsState &&
+              current is UpdatedIntermediateSchoolDetailsState) ||
+          (previous is FetchingIntermediateSchoolDetailsState &&
+              current is IntermediateSchoolDetailsFetchFailedState) ||
+          (previous is UpdatingIntermediateSchoolDetailsState &&
+              current is IntermediateSchoolDetailsUpdateFailedState),
       listener: (context, state) {
-        if (state is FetchedIntermediateSchoolDetailsState) {
+        if (state is IntermediateSchoolDetailsFetchFailedState ||
+            state is IntermediateSchoolDetailsUpdateFailedState) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.authError.toString().split(": ")[1])));
+        } else if (state is FetchedIntermediateSchoolDetailsState) {
           schoolNameController.text =
               state.intermediateSchoolDetails.schoolName;
           schoolCityController.text =
               state.intermediateSchoolDetails.schoolCity;
 
           percentageScoreController.text =
-              state.intermediateSchoolDetails.percentageScore;
+              state.intermediateSchoolDetails.percentageScore.toString();
           boardController.text = state.intermediateSchoolDetails.board;
 
           previousSchoolName = schoolNameController.text.trim();
@@ -125,7 +134,6 @@ class _IntermediateSchoolDetailsCardState
                           ? BlocProvider.of<IntermediateSchoolDetailsBloc>(
                                   context)
                               .add(UpdateIntermediateSchoolDetailsEvent(
-                                  //TODO: Sync Student details from logged in details
                                   studentID:
                                       (BlocProvider.of<LoginBloc>(context).state
                                               as LoggedInState)
@@ -141,8 +149,8 @@ class _IntermediateSchoolDetailsCardState
                                         schoolNameController.text.trim(),
                                     schoolCity:
                                         schoolCityController.text.trim(),
-                                    percentageScore:
-                                        percentageScoreController.text.trim(),
+                                    percentageScore: double.parse(
+                                        percentageScoreController.text.trim()),
                                     board: boardController.text.trim(),
                                   )))
                           : null;
