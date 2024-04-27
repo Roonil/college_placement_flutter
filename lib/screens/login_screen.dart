@@ -29,8 +29,16 @@ class _LoginScreenState extends State<LoginScreen> {
         listener: (context, state) => {
               if (state is LoggedInState)
                 {
-                  BlocProvider.of<DriveBloc>(context)
-                      .add(const FetchDrivesEvent(driveID: null)),
+                  BlocProvider.of<DriveBloc>(context).add(FetchDrivesEvent(
+                      driveID: null,
+                      token: (BlocProvider.of<LoginBloc>(context).state
+                              as LoggedInState)
+                          .student
+                          .token,
+                      studentID: (BlocProvider.of<LoginBloc>(context).state
+                              as LoggedInState)
+                          .student
+                          .id)),
                   BlocProvider.of<ResumeBloc>(context).add(FetchResumesEvent(
                       studentID: (BlocProvider.of<LoginBloc>(context).state
                               as LoggedInState)

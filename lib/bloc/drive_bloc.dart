@@ -12,7 +12,6 @@ import 'drive_events.dart';
 import 'drive_states.dart';
 
 DateTime convertToFlutterDateTime(String jsDateString) {
-  // Parse the date string using the JavaScript-like format
   DateFormat dateFormat = DateFormat("yyyy-MM-ddTHH:mm:ssZ", 'en_US');
   DateTime parsedDate = dateFormat.parse(jsDateString);
   return parsedDate;
@@ -36,40 +35,51 @@ class DriveBloc extends Bloc<DriveEvent, DriveState> {
             onTimeout: () => http.Response('Error', 408),
           );
 
-      final jsonBody = jsonDecode(resp.body);
-      final jsonBodyData = jsonBody['drives'];
+      final http.Response resp1 = await http.get(
+          Uri.parse("$registerForDriveURL?type=user&id=${event.studentID}"),
+          headers: {"Authorization": event.token});
 
-      for (var drive in jsonBodyData) {
-        final dateOfDrive = convertToFlutterDateTime(drive['date_of_drive']);
-        final currentDate = DateTime.now();
+      if (resp.statusCode == 200 && resp1.statusCode == 200) {
+        var jsonBody = jsonDecode(resp1.body);
+        var jsonBodyData = jsonBody['drives'];
 
-        companies.add(Company(
-            name: drive['company_name'],
-            companyID: drive['id'].toString(),
-            driveType: drive['type_of_drive'],
-            timeLeft:
-                "${convertToFlutterDateTime(drive['closes_at']).difference(currentDate).inDays}d",
-            imageURL: 'imageURL',
-            startedAtTime:
-                "${currentDate.difference(convertToFlutterDateTime(drive['created_at'])).inDays}d",
-            details: drive['company_about'],
-            eligibilityCriteria: drive['other_eligibility_criteria'],
-            dateOfDrive:
-                "${dateOfDrive.day}/${dateOfDrive.month}/${dateOfDrive.year}",
-            jobProfile: drive['job_profile'],
-            location: drive['job_location'],
-            package: drive['pay_package'],
-            bond: drive['bond'],
-            roles: (drive['positions'] as List<dynamic>)
-                .map((position) => position.toString())
-                .toList(),
-            process: [drive['placement_process']],
-            numRegistrations: drive['_count']['participants'],
-            hasRegistered: false));
+        final Set<int> registeredCompaniesIDs = {};
+        for (var drive in jsonBodyData) {
+          registeredCompaniesIDs.add(drive['drive_id'] ?? 0);
+        }
 
-        //TODO:Fix hasRegistered and numRegistrations
-      }
-      if (resp.statusCode == 200) {
+        jsonBody = jsonDecode(resp.body);
+        jsonBodyData = jsonBody['drives'];
+        companies.clear();
+
+        for (var drive in jsonBodyData) {
+          final dateOfDrive = convertToFlutterDateTime(drive['date_of_drive']);
+          final currentDate = DateTime.now();
+          companies.add(Company(
+              name: drive['company_name'],
+              companyID: drive['id'] ?? 0,
+              driveType: drive['type_of_drive'],
+              timeLeft:
+                  "${convertToFlutterDateTime(drive['closes_at']).difference(currentDate).inDays}d",
+              imageURL: 'imageURL',
+              startedAtTime:
+                  "${currentDate.difference(convertToFlutterDateTime(drive['created_at'])).inDays}d",
+              details: drive['company_about'],
+              eligibilityCriteria: drive['other_eligibility_criteria'],
+              dateOfDrive:
+                  "${dateOfDrive.day}/${dateOfDrive.month}/${dateOfDrive.year}",
+              jobProfile: drive['job_profile'],
+              location: drive['job_location'],
+              package: drive['pay_package'],
+              bond: drive['bond'],
+              roles: (drive['positions'] as List<dynamic>)
+                  .map((position) => position.toString())
+                  .toList(),
+              process: [drive['placement_process']],
+              numRegistrations: drive['_count']['participants'],
+              hasRegistered:
+                  registeredCompaniesIDs.contains(drive['id'] ?? 0)));
+        }
         await Future.delayed(const Duration(seconds: 0, milliseconds: 500))
             .then((_) => emit(FetchedDrivesState(
                 drives: companies, isLoading: false, authError: null)));

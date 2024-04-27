@@ -1,6 +1,5 @@
 class Company {
   final String name,
-      companyID,
       driveType,
       timeLeft,
       startedAtTime,
@@ -14,7 +13,7 @@ class Company {
 
   final String? imageURL;
   final List<String> roles, process;
-  final int numRegistrations;
+  final int numRegistrations, companyID;
   final bool hasRegistered;
 
   Company(

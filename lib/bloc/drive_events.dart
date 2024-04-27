@@ -9,8 +9,9 @@ abstract class DriveEvent {
 @immutable
 class FetchDrivesEvent implements DriveEvent {
   final int? driveID;
+  final int studentID;
+  final String token;
 
-  const FetchDrivesEvent({
-    required this.driveID,
-  });
+  const FetchDrivesEvent(
+      {required this.driveID, required this.studentID, required this.token});
 }

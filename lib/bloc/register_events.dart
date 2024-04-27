@@ -8,5 +8,13 @@ abstract class RegisterEvent {
 
 @immutable
 class ApplyToDriveEvent implements RegisterEvent {
-  const ApplyToDriveEvent();
+  final int studentID, driveID, selectedResume;
+  final String selectedRole, token;
+
+  const ApplyToDriveEvent(
+      {required this.studentID,
+      required this.driveID,
+      required this.token,
+      required this.selectedResume,
+      required this.selectedRole});
 }

@@ -65,7 +65,7 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
                   DriveTileName(
                       companyName: widget.company.name,
                       driveType: widget.company.driveType,
-                      companyID: widget.company.companyID,
+                      companyID: widget.company.companyID.toString(),
                       imageURL: widget.company.imageURL),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
@@ -176,8 +176,11 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
                                               .token));
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => StudentDetailsScreen(
-                                      selectedRoleIdx: selectedRoleIdx,
+                                      driveName: widget.company.name,
+                                      selectedRole:
+                                          widget.company.roles[selectedRoleIdx],
                                       selectedResumeIdx: groupValue,
+                                      driveID: widget.company.companyID,
                                     ),
                                   ));
                                 },
