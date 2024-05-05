@@ -63,7 +63,7 @@ class _MetricSchoolDetailsCardState extends State<MetricSchoolDetailsCard> {
           schoolCityController.text = state.metricSchoolDetails.schoolCity;
 
           percentageScoreController.text =
-              state.metricSchoolDetails.percentageScore;
+              state.metricSchoolDetails.percentageScore.toString();
           boardController.text = state.metricSchoolDetails.board;
 
           previousSchoolName = schoolNameController.text.trim();
@@ -93,9 +93,11 @@ class _MetricSchoolDetailsCardState extends State<MetricSchoolDetailsCard> {
             previousPercentageScore != percentageScoreController.text.trim() ||
             previousBoard != boardController.text.trim();
         return Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           elevation: 4,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(20),
             child: Form(
               key: formKey,
               child: Card(
@@ -141,8 +143,8 @@ class _MetricSchoolDetailsCardState extends State<MetricSchoolDetailsCard> {
                                           schoolNameController.text.trim(),
                                       schoolCity:
                                           schoolCityController.text.trim(),
-                                      percentageScore:
-                                          percentageScoreController.text.trim(),
+                                      percentageScore: double.parse(
+                                          percentageScoreController.text.trim()),
                                       board: boardController.text.trim())))
                           : null;
                     },

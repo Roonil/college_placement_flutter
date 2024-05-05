@@ -13,6 +13,7 @@ import '../bloc/details_blocs/personal_details_bloc.dart';
 import '../bloc/details_blocs/personal_details_events.dart';
 import '../bloc/login_bloc.dart';
 import '../bloc/login_bloc_states.dart';
+import '../bloc/login_events.dart';
 import '../bloc/resume_bloc.dart';
 import '../bloc/resume_states.dart';
 import '../main.dart';
@@ -23,6 +24,7 @@ import '../widgets/drive_tile_name.dart';
 import '../widgets/drive_details_screen/job_description_table.dart';
 import '../widgets/roles_chip_builder.dart';
 import './student_details_screen.dart';
+import 'login_screen.dart';
 
 class DriveDetailsScreen extends StatefulWidget {
   final Company company;
@@ -37,8 +39,6 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
   int selectedRoleIdx = 0;
   @override
   Widget build(BuildContext context) {
-    //TODO: Add refresh for resumes
-
     return BlocConsumer<ResumeBloc, ResumeState>(
         listener: (context, state) {
           (state is ResumeUpdateFailedState || state is ResumesFetchFailedState)
@@ -60,17 +60,29 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
               title: Text(widget.company.name),
               actions: [
                 IconButton(
-                    onPressed: () => Theme.of(context).colorScheme.brightness ==
-                            Brightness.dark
-                        ? MyApp.of(context).changeTheme(ThemeMode.light)
-                        : MyApp.of(context).changeTheme(ThemeMode.dark),
-                    icon: Icon(
-                      Theme.of(context).colorScheme.brightness ==
-                              Brightness.dark
-                          ? Icons.wb_sunny_rounded
-                          : Icons.nightlight_round,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ))
+                    tooltip: "Logout",
+                    onPressed: () {
+                      BlocProvider.of<LoginBloc>(context)
+                          .add(const LogoutEvent());
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ));
+                    },
+                    icon: const Icon(Icons.logout)),
+                IconButton(
+                  onPressed: () => Theme.of(context).colorScheme.brightness ==
+                          Brightness.dark
+                      ? MyApp.of(context).changeTheme(ThemeMode.light)
+                      : MyApp.of(context).changeTheme(ThemeMode.dark),
+                  icon: Icon(
+                    Theme.of(context).colorScheme.brightness == Brightness.dark
+                        ? Icons.wb_sunny_rounded
+                        : Icons.nightlight_round,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+                  tooltip: "Change Theme",
+                )
               ],
             ),
             body: Padding(
@@ -78,16 +90,149 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DriveTileName(
-                      companyName: widget.company.name,
-                      driveType: widget.company.driveType,
-                      companyID: widget.company.companyID.toString(),
-                      imageURL: widget.company.imageURL),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: DriveTileName(
+                            companyName: widget.company.name,
+                            driveType: widget.company.driveType,
+                            companyID: widget.company.companyID.toString(),
+                            imageURL: widget.company.imageURL),
+                      ),
+                      widget.company.hasRegistered ||
+                              widget.company.timeLeft < 0
+                          ? Container()
+                          : Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: ElevatedButton(
+                                  onPressed: !((state is UpdatedResumeState &&
+                                              ((state.resumes[
+                                                          'resume$groupValue'] !=
+                                                      null) &&
+                                                  state.resumes[
+                                                          'resume$groupValue']
+                                                      .toString()
+                                                      .isNotEmpty)) ||
+                                          (state is FetchedResumesState &&
+                                              ((state.resumes[
+                                                          'resume$groupValue'] !=
+                                                      null) &&
+                                                  state.resumes[
+                                                          'resume$groupValue']
+                                                      .toString()
+                                                      .isNotEmpty)))
+                                      ? null
+                                      : () {
+                                          BlocProvider.of<ContactDetailsBloc>(
+                                                  context)
+                                              .add(FetchContactDetailsEvent(
+                                                  studentID: (BlocProvider.of<
+                                                                      LoginBloc>(
+                                                                  context)
+                                                              .state
+                                                          as LoggedInState)
+                                                      .student
+                                                      .id,
+                                                  token: (BlocProvider.of<
+                                                                      LoginBloc>(
+                                                                  context)
+                                                              .state
+                                                          as LoggedInState)
+                                                      .student
+                                                      .token));
+                                          BlocProvider.of<
+                                                  PersonalDetailsBloc>(context)
+                                              .add(FetchPersonalDetailsEvent(
+                                                  studentID: (BlocProvider.of<
+                                                                      LoginBloc>(
+                                                                  context)
+                                                              .state
+                                                          as LoggedInState)
+                                                      .student
+                                                      .id,
+                                                  token: (BlocProvider.of<
+                                                                      LoginBloc>(
+                                                                  context)
+                                                              .state
+                                                          as LoggedInState)
+                                                      .student
+                                                      .token));
+                                          BlocProvider.of<
+                                                      UndergraduateDetailsBloc>(
+                                                  context)
+                                              .add(FetchUndergraduateDetailsEvent(
+                                                  studentID: (BlocProvider.of<
+                                                                      LoginBloc>(
+                                                                  context)
+                                                              .state
+                                                          as LoggedInState)
+                                                      .student
+                                                      .id,
+                                                  token: (BlocProvider.of<
+                                                                      LoginBloc>(
+                                                                  context)
+                                                              .state
+                                                          as LoggedInState)
+                                                      .student
+                                                      .token));
+                                          BlocProvider.of<
+                                                      MetricSchoolDetailsBloc>(
+                                                  context)
+                                              .add(FetchMetricSchoolDetailsEvent(
+                                                  studentID: (BlocProvider.of<
+                                                                      LoginBloc>(
+                                                                  context)
+                                                              .state
+                                                          as LoggedInState)
+                                                      .student
+                                                      .id,
+                                                  token: (BlocProvider.of<
+                                                                      LoginBloc>(
+                                                                  context)
+                                                              .state
+                                                          as LoggedInState)
+                                                      .student
+                                                      .token));
+                                          BlocProvider.of<
+                                                      IntermediateSchoolDetailsBloc>(
+                                                  context)
+                                              .add(FetchIntermediateSchoolDetailsEvent(
+                                                  studentID: (BlocProvider.of<
+                                                                      LoginBloc>(
+                                                                  context)
+                                                              .state
+                                                          as LoggedInState)
+                                                      .student
+                                                      .id,
+                                                  token: (BlocProvider.of<
+                                                                      LoginBloc>(
+                                                                  context)
+                                                              .state
+                                                          as LoggedInState)
+                                                      .student
+                                                      .token));
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                StudentDetailsScreen(
+                                              driveName: widget.company.name,
+                                              selectedRole: widget.company
+                                                  .roles[selectedRoleIdx],
+                                              selectedResumeIdx: groupValue,
+                                              driveID: widget.company.companyID,
+                                            ),
+                                          ));
+                                        },
+                                  child: const Text("Apply")),
+                            ),
+                    ],
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: Text("${widget.company.startedAtTime} ago"),
+                    child: Text("${widget.company.startedAtTime}d ago"),
                   ),
-                  widget.company.hasRegistered
+                  widget.company.hasRegistered || widget.company.timeLeft < 0
                       ? Container()
                       : Row(
                           mainAxisSize: MainAxisSize.min,
@@ -126,183 +271,109 @@ class _DriveDetailsScreenState extends State<DriveDetailsScreen> {
                                         Theme.of(context).colorScheme.tertiary),
                           ),
                         )
-                      : SingleChildScrollView(
-                          clipBehavior: Clip.none,
-                          scrollDirection: Axis.horizontal,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: ElevatedButton(
-                                      onPressed: () {
-                                        BlocProvider.of<
-                                                ContactDetailsBloc>(context)
-                                            .add(FetchContactDetailsEvent(
-                                                studentID: (BlocProvider.of<
-                                                            LoginBloc>(context)
-                                                        .state as LoggedInState)
-                                                    .student
-                                                    .id,
-                                                token: (BlocProvider.of<
-                                                            LoginBloc>(context)
-                                                        .state as LoggedInState)
-                                                    .student
-                                                    .token));
-                                        BlocProvider.of<PersonalDetailsBloc>(
-                                                context)
-                                            .add(FetchPersonalDetailsEvent(
-                                                studentID: (BlocProvider.of<
-                                                            LoginBloc>(context)
-                                                        .state as LoggedInState)
-                                                    .student
-                                                    .id,
-                                                token: (BlocProvider.of<
-                                                            LoginBloc>(context)
-                                                        .state as LoggedInState)
-                                                    .student
-                                                    .token));
-                                        BlocProvider.of<
-                                                    UndergraduateDetailsBloc>(
-                                                context)
-                                            .add(FetchUndergraduateDetailsEvent(
-                                                studentID: (BlocProvider.of<
-                                                            LoginBloc>(context)
-                                                        .state as LoggedInState)
-                                                    .student
-                                                    .id,
-                                                token: (BlocProvider.of<
-                                                            LoginBloc>(context)
-                                                        .state as LoggedInState)
-                                                    .student
-                                                    .token));
-                                        BlocProvider.of<
-                                                    MetricSchoolDetailsBloc>(
-                                                context)
-                                            .add(FetchMetricSchoolDetailsEvent(
-                                                studentID: (BlocProvider.of<
-                                                            LoginBloc>(context)
-                                                        .state as LoggedInState)
-                                                    .student
-                                                    .id,
-                                                token: (BlocProvider.of<
-                                                            LoginBloc>(context)
-                                                        .state as LoggedInState)
-                                                    .student
-                                                    .token));
-                                        BlocProvider.of<
-                                                    IntermediateSchoolDetailsBloc>(
-                                                context)
-                                            .add(FetchIntermediateSchoolDetailsEvent(
-                                                studentID: (BlocProvider.of<
-                                                            LoginBloc>(context)
-                                                        .state as LoggedInState)
-                                                    .student
-                                                    .id,
-                                                token: (BlocProvider.of<
-                                                            LoginBloc>(context)
-                                                        .state as LoggedInState)
-                                                    .student
-                                                    .token));
-                                        Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              StudentDetailsScreen(
-                                            driveName: widget.company.name,
-                                            selectedRole: widget
-                                                .company.roles[selectedRoleIdx],
-                                            selectedResumeIdx: groupValue,
-                                            driveID: widget.company.companyID,
-                                          ),
-                                        ));
-                                      },
-                                      child: const Text("Apply")),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.only(
-                                            left: 24,
-                                            top: 4,
-                                            bottom: 4,
-                                            right: 10)),
-                                    onPressed: () {
-                                      showModalBottomSheet(
-                                          elevation: 0,
-                                          useRootNavigator: true,
-                                          context: context,
-                                          builder: (context) => ResumePicker(
-                                                groupValue: groupValue,
-                                                onChanged: (value) => {
-                                                  setState(() {
-                                                    groupValue = value;
-                                                  })
-                                                },
-                                              ));
-                                    },
-                                    child: const Row(
-                                      children: [
-                                        Text("Select Resume"),
-                                        Icon(
-                                          Icons.arrow_drop_down,
-                                        )
-                                      ],
+                      : widget.company.timeLeft < 0
+                          ? Container()
+                          : SingleChildScrollView(
+                              clipBehavior: Clip.none,
+                              scrollDirection: Axis.horizontal,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16.0),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.only(
+                                                left: 24,
+                                                top: 4,
+                                                bottom: 4,
+                                                right: 10)),
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                              elevation: 0,
+                                              useRootNavigator: true,
+                                              context: context,
+                                              builder: (context) =>
+                                                  ResumePicker(
+                                                    groupValue: groupValue,
+                                                    onChanged: (value) => {
+                                                      setState(() {
+                                                        groupValue = value;
+                                                      })
+                                                    },
+                                                  ));
+                                        },
+                                        child: const Row(
+                                          children: [
+                                            Text("Select Resume"),
+                                            Icon(
+                                              Icons.arrow_drop_down,
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                (state is UpdatingResumeState ||
-                                        state is FetchingResumesState)
-                                    ? const SizedBox(
-                                        width: 32,
-                                        height: 32,
-                                        child: CircularProgressIndicator(),
-                                      )
-                                    : Row(
-                                        children: ((state
-                                                        is UpdatedResumeState &&
-                                                    state.resumes[
-                                                            'resume_$groupValue']
-                                                        .toString()
-                                                        .isNotEmpty) ||
-                                                (state is FetchedResumesState &&
-                                                    state.resumes[
-                                                            'resume_$groupValue']
-                                                        .toString()
-                                                        .isNotEmpty))
-                                            ? [
-                                                Icon(
-                                                  Icons
-                                                      .check_circle_outline_outlined,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiary,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
+                                    (state is UpdatingResumeState ||
+                                            state is FetchingResumesState)
+                                        ? const SizedBox(
+                                            width: 24,
+                                            height: 24,
+                                            child: CircularProgressIndicator(),
+                                          )
+                                        : Row(
+                                            children: ((state
+                                                            is UpdatedResumeState &&
+                                                        ((state.resumes[
+                                                                    'resume$groupValue'] !=
+                                                                null) &&
+                                                            state.resumes[
+                                                                    'resume$groupValue']
+                                                                .toString()
+                                                                .isNotEmpty)) ||
+                                                    (state
+                                                            is FetchedResumesState &&
+                                                        (state.resumes[
+                                                                'resume$groupValue'] !=
+                                                            null) &&
+                                                        (state.resumes[
+                                                                'resume$groupValue']
+                                                            .toString()
+                                                            .isNotEmpty)))
+                                                ? [
+                                                    Icon(
+                                                      Icons
+                                                          .check_circle_outline_outlined,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .tertiary,
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 4.0),
+                                                      child: Text(
+                                                          "Resume$groupValue.pdf"),
+                                                    ),
+                                                  ]
+                                                : [
+                                                    const Icon(
+                                                      Icons.cancel_outlined,
+                                                      color: Colors.red,
+                                                    ),
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
                                                           left: 4.0),
-                                                  child: Text(
-                                                      "Resume$groupValue.pdf"),
-                                                ),
-                                              ]
-                                            : [
-                                                const Icon(
-                                                  Icons.cancel_outlined,
-                                                  color: Colors.red,
-                                                ),
-                                                const Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 4.0),
-                                                  child: Text(
-                                                      "No Resume Selected!"),
-                                                )
-                                              ])
-                              ],
+                                                      child: Text(
+                                                          "No Resume Selected!"),
+                                                    )
+                                                  ])
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
                   Expanded(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,

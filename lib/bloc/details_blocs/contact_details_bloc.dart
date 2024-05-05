@@ -87,25 +87,11 @@ class ContactDetailsBloc
                 authError: null)));
       } else {
         emit(const ContactDetailsUpdateFailedState(
-            isLoading: false, authError: HttpException("Fetching Failed!")));
+            isLoading: false, authError: HttpException("Updating Failed!")));
       }
     } catch (_) {
       emit(const ContactDetailsUpdateFailedState(
           isLoading: false, authError: HttpException("An Error occured!")));
     }
-
-    // await Future.delayed(const Duration(seconds: 4)).then((_) => emit(
-    //     UpdatedContactDetailsState(
-    //         contactDetails: ContactDetails(
-    //             addressLine1: "Updated AD1",
-    //             addressLine2: "Updated AD2",
-    //             city: "UPD city",
-    //             country: "UPD cn",
-    //             emailAddress: "upd_anan@gmail.com",
-    //             phoneNumber: "1234567890",
-    //             pinCode: "335001",
-    //             state: "updS"),
-    //         isLoading: false,
-    //         authError: null)));
   }
 }

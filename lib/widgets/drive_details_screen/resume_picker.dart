@@ -1,6 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/login_bloc.dart';
+import '../../bloc/login_bloc_states.dart';
 import '../../bloc/resume_bloc.dart';
+import '../../bloc/resume_events.dart';
 import '../../bloc/resume_states.dart';
 
 import 'package:flutter/material.dart';
@@ -20,7 +23,7 @@ class ResumePicker extends StatefulWidget {
 
 class _ResumePickerState extends State<ResumePicker> {
   int? groupValue;
-  final Map<String, dynamic> resumes = {};
+  final Map<String, String> resumes = {};
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,10 @@ class _ResumePickerState extends State<ResumePicker> {
         buildWhen: (previous, current) =>
             (previous is FetchingResumesState &&
                 current is FetchedResumesState) ||
-            (previous is UpdatingResumeState && current is UpdatedResumeState),
+            (previous is UpdatingResumeState &&
+                current is UpdatedResumeState) ||
+            current is UpdatingResumeState ||
+            current is FetchingResumesState,
         builder: (context, state) {
           state is FetchedResumesState
               ? resumes.addAll(state.resumes)
@@ -51,10 +57,25 @@ class _ResumePickerState extends State<ResumePicker> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                IconButton(
+                    onPressed: state is FetchingResumesState ||
+                            state is UpdatingResumeState
+                        ? null
+                        : () => BlocProvider.of<ResumeBloc>(context).add(
+                            FetchResumesEvent(
+                                studentID: (BlocProvider.of<LoginBloc>(context)
+                                        .state as LoggedInState)
+                                    .student
+                                    .id)),
+                    tooltip: "Refresh Resumes",
+                    icon: const Icon(Icons.refresh)),
                 ResumeTile(
-                    name: resumes['resume_1'] != null ? "Resume1.pdf" : null,
+                    name: resumes['resume1'] != null ? "Resume1.pdf" : null,
+                    uri: resumes['resume1'] != null
+                        ? Uri.parse(resumes['resume1']!)
+                        : null,
                     currentValue: 1,
                     groupValue: groupValue ?? widget.groupValue,
                     onChanged: (value) => setState(() {
@@ -62,7 +83,10 @@ class _ResumePickerState extends State<ResumePicker> {
                           widget.onChanged(value ?? 1);
                         })),
                 ResumeTile(
-                    name: resumes['resume_2'] != null ? "Resume2.pdf" : null,
+                    name: resumes['resume2'] != null ? "Resume2.pdf" : null,
+                    uri: resumes['resume2'] != null
+                        ? Uri.parse(resumes['resume2']!)
+                        : null,
                     currentValue: 2,
                     groupValue: groupValue ?? widget.groupValue,
                     onChanged: (value) => setState(() {
@@ -70,7 +94,10 @@ class _ResumePickerState extends State<ResumePicker> {
                           widget.onChanged(value ?? 2);
                         })),
                 ResumeTile(
-                    name: resumes['resume_3'] != null ? "Resume3.pdf" : null,
+                    name: resumes['resume3'] != null ? "Resume3.pdf" : null,
+                    uri: resumes['resume3'] != null
+                        ? Uri.parse(resumes['resume3']!)
+                        : null,
                     currentValue: 3,
                     groupValue: groupValue ?? widget.groupValue,
                     onChanged: (value) => setState(() {

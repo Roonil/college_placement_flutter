@@ -99,9 +99,11 @@ class _IntermediateSchoolDetailsCardState
             previousPercentageScore != percentageScoreController.text.trim() ||
             previousBoard != boardController.text.trim();
         return Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           elevation: 4,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(20),
             child: Form(
               key: formKey,
               child: Card(

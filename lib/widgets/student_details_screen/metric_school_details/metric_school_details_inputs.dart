@@ -23,7 +23,6 @@ class MetricSchoolDetailsInputs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color requiredBorderColor = Theme.of(context).colorScheme.tertiary;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -50,12 +49,6 @@ class MetricSchoolDetailsInputs extends StatelessWidget {
                   errorMaxLines: 4,
                   contentPadding: const EdgeInsets.all(8),
                   label: const Text("School"),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: requiredBorderColor,
-                      ),
-                      borderRadius: BorderRadius.circular(20)),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20))),
             ),
@@ -84,12 +77,6 @@ class MetricSchoolDetailsInputs extends StatelessWidget {
                   errorMaxLines: 4,
                   contentPadding: const EdgeInsets.all(8),
                   label: const Text("City"),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: requiredBorderColor,
-                      ),
-                      borderRadius: BorderRadius.circular(20)),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20))),
             ),
@@ -119,12 +106,6 @@ class MetricSchoolDetailsInputs extends StatelessWidget {
                   errorMaxLines: 4,
                   contentPadding: const EdgeInsets.all(8),
                   label: const Text("Percentage Score (Eg. 92.80)"),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: requiredBorderColor,
-                      ),
-                      borderRadius: BorderRadius.circular(20)),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20))),
             ),
@@ -153,12 +134,6 @@ class MetricSchoolDetailsInputs extends StatelessWidget {
                   errorMaxLines: 4,
                   contentPadding: const EdgeInsets.all(8),
                   label: const Text("Exam Board"),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: requiredBorderColor,
-                      ),
-                      borderRadius: BorderRadius.circular(20)),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20))),
             ),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class RolesChipBuilder extends StatelessWidget {
@@ -15,17 +17,26 @@ class RolesChipBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Flexible> rowChildren = [];
 
-    for (int idx = 0; idx < roles.length; idx++) {
+    for (int idx = 0; idx < min(2, roles.length); idx++) {
       final String role = roles[idx];
       rowChildren.add(Flexible(
         child: Padding(
             padding: const EdgeInsets.only(right: 8),
             child: selectedIdx != null
                 ? FilterChip.elevated(
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                    checkmarkColor: Theme.of(context).colorScheme.onBackground,
                     onSelected: (value) => onTap!(idx),
-                    checkmarkColor: Colors.white,
+                    labelStyle: Theme.of(context)
+                        .textTheme
+                        .labelMedium
+                        ?.copyWith(
+                            color: Theme.of(context).colorScheme.onBackground),
+                    backgroundColor: Theme.of(context).colorScheme.background,
                     elevation: 4,
-                    padding: EdgeInsets.zero,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
                     label: Text(
                       role,
                     ),
@@ -34,6 +45,10 @@ class RolesChipBuilder extends StatelessWidget {
                     label: Text(role),
                   )),
       ));
+    }
+
+    if (roles.length > 2) {
+      rowChildren.add(Flexible(child: Text("+${roles.length - 2} more")));
     }
     return Row(
         mainAxisAlignment: MainAxisAlignment.start,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'confirm_details_updation_dialog.dart';
+import 'undo_details_updation_dialog.dart';
+
 class DetailsSubtitle extends StatelessWidget {
   const DetailsSubtitle(
       {super.key,
@@ -62,21 +65,8 @@ class DetailsSubtitle extends StatelessWidget {
                   IconButton(
                     onPressed: () => showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                              title: const Text("Confirm Action"),
-                              content: const Text(
-                                  "Do you want to undo all changes? All unsaved changes would be lost!"),
-                              actions: [
-                                TextButton(
-                                    onPressed: () =>
-                                        {onUndo(), Navigator.of(context).pop()},
-                                    child: const Text("Yes")),
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text("No"))
-                              ],
-                            )),
+                        builder: (context) =>
+                            UndoDetailsUpdationDialog(onUndo: onUndo)),
                     icon: const Icon(
                       Icons.undo,
                       color: Colors.red,
@@ -86,23 +76,8 @@ class DetailsSubtitle extends StatelessWidget {
                   IconButton(
                       onPressed: () => showDialog(
                             context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text("Confirm Action"),
-                              content: const Text(
-                                  "Do you want to save all changes and update them on the server?"),
-                              actions: [
-                                TextButton(
-                                    onPressed: () => {
-                                          onSaved(),
-                                          Navigator.of(context).pop()
-                                        },
-                                    child: const Text("Yes")),
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text("No"))
-                              ],
-                            ),
+                            builder: (context) =>
+                                ConfirmDetailsUpdationDialog(onSaved: onSaved),
                           ),
                       tooltip: "Save Changes",
                       icon: Icon(

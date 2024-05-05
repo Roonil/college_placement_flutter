@@ -261,7 +261,7 @@ class UndergraduateDetailsInputs extends StatelessWidget {
                           try {
                             return (name != null && newName.hasMatch(name)
                                 ? null
-                                : "Please enter a valid Backlogs");
+                                : "Please enter a valid Backlog");
                           } catch (_) {
                             return "not in range";
                           }

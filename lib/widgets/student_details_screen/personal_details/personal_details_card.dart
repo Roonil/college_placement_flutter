@@ -88,8 +88,10 @@ class _PersonalDetailsCardState extends State<PersonalDetailsCard> {
 
         return Card(
           elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(20),
             child: Form(
               key: formKey,
               child: Card(

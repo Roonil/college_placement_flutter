@@ -40,7 +40,8 @@ class MetricSchoolDetailsBloc
             .then((_) => emit(FetchedMetricSchoolDetailsState(
                 metricSchoolDetails: MetricSchoolDetails(
                     board: jsonBodyData['matric_board'] ?? "",
-                    percentageScore: jsonBodyData['matric_result'].toString(),
+                    percentageScore: double.parse(
+                        (jsonBodyData['matric_result'] ?? 0).toString()),
                     schoolCity: jsonBodyData['matric_city'] ?? "",
                     schoolName: jsonBodyData['matric_school_name'] ?? ""),
                 isLoading: false,
@@ -89,7 +90,7 @@ class MetricSchoolDetailsBloc
                 authError: null)));
       } else {
         emit(const MetricSchoolDetailsUpdateFailedState(
-            isLoading: false, authError: HttpException("Fetching Failed!")));
+            isLoading: false, authError: HttpException("Updating Failed!")));
       }
     } catch (_) {
       emit(const MetricSchoolDetailsUpdateFailedState(

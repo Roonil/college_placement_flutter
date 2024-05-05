@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +42,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       FlutterDisplayMode.setHighRefreshRate();
     }
     return MultiBlocProvider(

@@ -12,9 +12,10 @@ class DriveTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 4,
       child: InkWell(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(20),
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => DriveDetailsScreen(company: company),
         )),
@@ -71,11 +72,16 @@ class DriveTile extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 8.0),
-                          child: Icon(Icons.timelapse),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: company.timeLeft < 0
+                              ? const Icon(Icons.timer_off_outlined)
+                              : const Icon(Icons.timelapse),
                         ),
-                        Flexible(child: Text("${company.timeLeft} left")),
+                        Flexible(
+                            child: company.timeLeft < 0
+                                ? const Text("Expired")
+                                : Text("${company.timeLeft}d left")),
                       ],
                     ),
                   )

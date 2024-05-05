@@ -3,14 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io' show Platform;
 
 import '../bloc/drive_bloc.dart';
+import '../bloc/drive_events.dart';
 import '../bloc/drive_states.dart';
+import '../bloc/login_bloc.dart';
+import '../bloc/login_bloc_states.dart';
+import '../bloc/login_events.dart';
 import '../dummy_data/companies.dart';
+import '../dummy_data/filter_actions.dart';
 import '../dummy_data/filters.dart';
 import '../main.dart';
 import '../models/company.dart';
 import '../widgets/drives_screen/drive_tile.dart';
 import '../widgets/drives_screen/filter_builder.dart';
 import '../widgets/drives_screen/filter_functions.dart';
+import '../widgets/drives_screen/search_criteria_builder.dart';
+import '../widgets/drives_screen/sort_criteria_builder.dart';
+import 'login_screen.dart';
 
 class DrivesScreen extends StatefulWidget {
   const DrivesScreen({
@@ -26,20 +34,65 @@ class _DrivesScreenState extends State<DrivesScreen> {
   Set<Company> previouslyFilteredCompanies = companies;
   final TextEditingController searchController = TextEditingController();
 
-  Set<Company> searchCompanies(
-      {required Set<Company> companies, required String searchString}) {
-    final Set<Company> searchedCompanies = {};
-    for (Company company in companies) {
-      if (company.name.toLowerCase().contains(searchString.toLowerCase())) {
-        searchedCompanies.add(company);
-      }
-    }
-
-    return searchedCompanies;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final SortAndFilter sortAndFilter = SortAndFilter(
+        onChanged: (value) => setState(() {
+              FilterFunctions.showExpired = !FilterFunctions.showExpired;
+
+              filteredCompanies = FilterFunctions.sortCompanies(
+                  companies: previouslyFilteredCompanies,
+                  sortCriteria: FilterFunctions.sortByField);
+
+              // filteredCompanies = previouslyFilteredCompanies;
+            }),
+        applyFilterCallBack: (filterType) {
+          setState(() {
+            previouslyFilteredCompanies = FilterFunctions.applyFilters(
+                companies: companies, filterType: filterType);
+            filteredCompanies = FilterFunctions.searchCompanies(
+                searchString: searchController.text.trim().toLowerCase(),
+                companies: previouslyFilteredCompanies);
+          });
+        },
+        criterias: {
+          "Name": (value) => setState(() {
+                (value)
+                    ? filteredCompanies = FilterFunctions.sortCompanies(
+                        companies: previouslyFilteredCompanies,
+                        sortCriteria: "Name")
+                    : null;
+              }),
+          "Registrations": (value) => setState(() {
+                (value)
+                    ? filteredCompanies = FilterFunctions.sortCompanies(
+                        companies: previouslyFilteredCompanies,
+                        sortCriteria: "Registrations")
+                    : null;
+              }),
+          "Date of Drive": (value) => setState(() {
+                (value)
+                    ? filteredCompanies = FilterFunctions.sortCompanies(
+                        companies: previouslyFilteredCompanies,
+                        sortCriteria: "Date of Drive")
+                    : null;
+              }),
+          "Time Left": (value) => setState(() {
+                (value)
+                    ? filteredCompanies = FilterFunctions.sortCompanies(
+                        companies: previouslyFilteredCompanies,
+                        sortCriteria: "Time Left")
+                    : null;
+              }),
+          "Date of Creation": (value) => setState(() {
+                (value)
+                    ? filteredCompanies = FilterFunctions.sortCompanies(
+                        companies: previouslyFilteredCompanies,
+                        sortCriteria: "Date of Creation")
+                    : null;
+              })
+        });
+
     return BlocConsumer<DriveBloc, DriveState>(
         listenWhen: (previous, current) =>
             previous is FetchingDrivesState &&
@@ -57,12 +110,24 @@ class _DrivesScreenState extends State<DrivesScreen> {
             (previous is FetchingDrivesState &&
                 current is FetchedDrivesState) ||
             (previous is FetchingDrivesState &&
-                current is DrivesFetchFailedState),
+                current is DrivesFetchFailedState) ||
+            (current is FetchingDrivesState),
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
               title: const Text("Ongoing Drives"),
               actions: [
+                IconButton(
+                    tooltip: "Logout",
+                    onPressed: () {
+                      BlocProvider.of<LoginBloc>(context)
+                          .add(const LogoutEvent());
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ));
+                    },
+                    icon: const Icon(Icons.logout)),
                 IconButton(
                   onPressed: () => Theme.of(context).colorScheme.brightness ==
                           Brightness.dark
@@ -78,165 +143,227 @@ class _DrivesScreenState extends State<DrivesScreen> {
                 )
               ],
             ),
-            //TODO: Add function to mark drives (review for later-ish)
             endDrawer: !Platform.isAndroid && !Platform.isIOS
-                ? Drawer(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FilterBuilder(
-                          filters: filters,
-                          applyFilterCallBack: (filterType) {
-                            setState(() {
-                              previouslyFilteredCompanies =
-                                  FilterFunctions.applyFilters(
-                                      companies: companies,
-                                      filterType: filterType);
-
-                              filteredCompanies = searchCompanies(
-                                  searchString: searchController.text
-                                      .trim()
-                                      .toLowerCase(),
-                                  companies: previouslyFilteredCompanies);
-                            });
-                          }),
-                    ),
-                  )
+                ? Drawer(child: sortAndFilter)
                 : null,
-
-            body: state is FetchingDrivesState
-                ? const Center(child: CircularProgressIndicator())
-                : Builder(builder: (context) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
+            body: Builder(builder: (context) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, bottom: 8),
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 8.0, bottom: 8),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Flexible(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 8.0, right: 8),
-                                    //TODO: Add criteria using which to search (eg name, description, roles etc (FFBE))
-                                    child: TextFormField(
-                                      controller: searchController,
-                                      onFieldSubmitted: (value) => setState(() {
-                                        filteredCompanies = searchCompanies(
-                                            companies:
-                                                previouslyFilteredCompanies,
-                                            searchString:
-                                                value.trim().toLowerCase());
-                                      }),
-                                      decoration: InputDecoration(
-                                          suffixIcon: IconButton(
-                                            icon: const Icon(Icons.search),
-                                            tooltip: "Search",
-                                            onPressed: () {
+                          Flexible(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 8.0, right: 8),
+                              child: TextFormField(
+                                enabled: state is! FetchingDrivesState,
+                                controller: searchController,
+                                onFieldSubmitted: (value) => setState(() {
+                                  filteredCompanies =
+                                      FilterFunctions.searchCompanies(
+                                          companies:
+                                              previouslyFilteredCompanies,
+                                          searchString:
+                                              value.trim().toLowerCase());
+                                }),
+                                decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                      icon: const Icon(Icons.search),
+                                      tooltip: "Search",
+                                      onPressed: state is FetchingDrivesState
+                                          ? null
+                                          : () {
                                               setState(() {
-                                                filteredCompanies = searchCompanies(
-                                                    companies:
-                                                        previouslyFilteredCompanies,
-                                                    searchString:
-                                                        searchController.text
-                                                            .trim()
-                                                            .toLowerCase());
+                                                filteredCompanies = FilterFunctions
+                                                    .searchCompanies(
+                                                        companies:
+                                                            previouslyFilteredCompanies,
+                                                        searchString:
+                                                            searchController
+                                                                .text
+                                                                .trim()
+                                                                .toLowerCase());
                                               });
                                             },
-                                          ),
-                                          isDense: true,
-                                          label:
-                                              const Text("Search for Drives"),
-                                          contentPadding:
-                                              const EdgeInsets.all(10),
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20))),
                                     ),
-                                  ),
-                                ),
-                                Padding(
+                                    isDense: true,
+                                    label: const Text("Search for Drives"),
+                                    contentPadding: const EdgeInsets.all(10),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20))),
+                              ),
+                            ),
+                          ),
+                          searchController.text.trim().isEmpty
+                              ? Container()
+                              : Padding(
                                   padding: const EdgeInsets.only(bottom: 8.0),
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
-                                    onPressed: () => Platform.isAndroid ||
-                                            Platform.isIOS
-                                        ? showModalBottomSheet(
-                                            useRootNavigator: true,
-                                            context: context,
-                                            builder: (context) => Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: FilterBuilder(
-                                                  filters: filters,
-                                                  applyFilterCallBack:
-                                                      (filterType) {
-                                                    setState(() {
-                                                      previouslyFilteredCompanies =
-                                                          FilterFunctions
-                                                              .applyFilters(
-                                                                  companies:
-                                                                      companies,
-                                                                  filterType:
-                                                                      filterType);
-
-                                                      filteredCompanies = searchCompanies(
-                                                          searchString:
-                                                              searchController
-                                                                  .text
-                                                                  .trim()
-                                                                  .toLowerCase(),
-                                                          companies:
-                                                              previouslyFilteredCompanies);
-                                                    });
-                                                  }),
-                                            ),
-                                          )
-                                        : Scaffold.of(context).openEndDrawer(),
-                                    icon: Icon(
-                                      Icons.filter_list_rounded,
-                                      color: FilterFunctions
-                                              .appliedFilters.isNotEmpty
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .tertiary
-                                          : null,
+                                    onPressed: state is FetchingDrivesState
+                                        ? null
+                                        : () {
+                                            setState(() {
+                                              searchController.text = "";
+                                              filteredCompanies = FilterFunctions
+                                                  .searchCompanies(
+                                                      companies:
+                                                          previouslyFilteredCompanies,
+                                                      searchString:
+                                                          searchController.text
+                                                              .trim()
+                                                              .toLowerCase());
+                                            });
+                                          },
+                                    icon: const Icon(
+                                      Icons.clear,
                                     ),
-                                    tooltip: "Filters",
-                                  ),
-                                )
-                                //TODO: Add clear filters button
-                              ],
+                                    tooltip: "Clear Search Results",
+                                  )),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: state is FetchingDrivesState
+                                  ? null
+                                  : () {
+                                      BlocProvider.of<DriveBloc>(context).add(
+                                          FetchDrivesEvent(
+                                              driveID: null,
+                                              studentID: (BlocProvider.of<
+                                                          LoginBloc>(context)
+                                                      .state as LoggedInState)
+                                                  .student
+                                                  .id,
+                                              token: (BlocProvider.of<
+                                                          LoginBloc>(context)
+                                                      .state as LoggedInState)
+                                                  .student
+                                                  .token));
+                                    },
+                              icon: const Icon(
+                                Icons.refresh,
+                              ),
+                              tooltip: "Refresh Drives",
                             ),
                           ),
-                          filteredCompanies.isEmpty
-                              ? Text(
-                                  "No Drives Found!",
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
-                                )
-                              : Expanded(
-                                  child: ListView.separated(
-                                    shrinkWrap: true,
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(
-                                      height: 20,
-                                    ),
-                                    itemCount: filteredCompanies.length,
-                                    itemBuilder: (context, index) => DriveTile(
-                                        company:
-                                            filteredCompanies.elementAt(index)),
-                                  ),
-                                ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: state is FetchingDrivesState
+                                  ? null
+                                  : () => Platform.isAndroid || Platform.isIOS
+                                      ? showModalBottomSheet(
+                                          useRootNavigator: true,
+                                          context: context,
+                                          builder: (context) => sortAndFilter)
+                                      : Scaffold.of(context).openEndDrawer(),
+                              icon: Icon(
+                                Icons.filter_list_rounded,
+                                color: FilterFunctions.appliedFilters.isNotEmpty
+                                    ? Theme.of(context).colorScheme.tertiary
+                                    : null,
+                              ),
+                              tooltip: "Filters",
+                            ),
+                          )
                         ],
                       ),
-                    );
-                  }),
+                    ),
+                    state is FetchingDrivesState
+                        ? const Center(child: CircularProgressIndicator())
+                        : filteredCompanies.isEmpty
+                            ? Text(
+                                "No Drives Found!",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              )
+                            : Expanded(
+                                child: ListView.separated(
+                                  shrinkWrap: true,
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                    height: 20,
+                                  ),
+                                  itemCount: filteredCompanies.length,
+                                  itemBuilder: (context, index) => DriveTile(
+                                      company:
+                                          filteredCompanies.elementAt(index)),
+                                ),
+                              ),
+                  ],
+                ),
+              );
+            }),
           );
         });
+  }
+}
+
+class SortAndFilter extends StatefulWidget {
+  const SortAndFilter(
+      {super.key,
+      required this.applyFilterCallBack,
+      required this.criterias,
+      required this.onChanged});
+  final Function(FilterType) applyFilterCallBack;
+  final Map<String, Function(bool)> criterias;
+  final Function(bool) onChanged;
+  @override
+  State<SortAndFilter> createState() => _SortAndFilterState();
+}
+
+class _SortAndFilterState extends State<SortAndFilter> {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FilterBuilder(
+                  filters: filters,
+                  applyFilterCallBack: widget.applyFilterCallBack),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Divider(),
+              ),
+              const SearchCriteriaBuilder(),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Divider(),
+              ),
+              SortCriteriaBuilder(criterias: widget.criterias),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Divider(),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Show Expired Drives"),
+                    Switch(
+                        value: FilterFunctions.showExpired,
+                        onChanged: (value) => setState(() {
+                              widget.onChanged(value);
+                            })),
+                  ],
+                ),
+              )
+            ],
+          )),
+    );
   }
 }

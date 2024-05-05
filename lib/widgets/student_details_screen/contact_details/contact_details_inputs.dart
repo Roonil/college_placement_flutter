@@ -77,47 +77,44 @@ class ContactDetailsInputs extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20))),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      flex: 7,
-                      child: TextFormField(
-                        enabled: inputsEnabled,
-                        onChanged: onChanged,
-                        controller: addressLine1Controller,
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.streetAddress,
-                        validator: (addressLine1) =>
-                            addressLine1 == null || addressLine1.length < 3
-                                ? "Please enter a valid Address"
-                                : null,
-                        decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(8),
-                            label: const Text("Current Address"),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20))),
-                      ),
-                    ),
-                    const Spacer(),
-                    Flexible(
-                      flex: 7,
-                      child: TextFormField(
-                        enabled: inputsEnabled,
-                        onChanged: onChanged,
-                        controller: addressLine2Controller,
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.streetAddress,
-                        decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(8),
-                            label: const Text("Permanent Address"),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20))),
-                      ),
-                    ),
-                  ],
+              Flexible(
+                flex: 7,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFormField(
+                    enabled: inputsEnabled,
+                    onChanged: onChanged,
+                    controller: addressLine1Controller,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.streetAddress,
+                    validator: (addressLine1) =>
+                        addressLine1 == null || addressLine1.length < 3
+                            ? "Please enter a valid Address"
+                            : null,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8),
+                        label: const Text("Current Address"),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20))),
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 7,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFormField(
+                    enabled: inputsEnabled,
+                    onChanged: onChanged,
+                    controller: addressLine2Controller,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.streetAddress,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8),
+                        label: const Text("Permanent Address"),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20))),
+                  ),
                 ),
               ),
             ],

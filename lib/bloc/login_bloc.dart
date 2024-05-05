@@ -55,5 +55,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  FutureOr<void> _logout(LogoutEvent event, Emitter<LoginState> emit) {}
+  Future<FutureOr<void>> _logout(
+      LogoutEvent event, Emitter<LoginState> emit) async {
+    emit(const LoggingOutState(isLoading: true, authError: null));
+
+    await Future.delayed(const Duration(milliseconds: 500)).then((value) =>
+        emit(const LoggedOutState(isLoading: false, authError: null)));
+  }
 }

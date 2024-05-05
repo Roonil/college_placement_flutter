@@ -71,10 +71,11 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
               state.undergraduateDetails.universityEmail;
           degreeController.text = state.undergraduateDetails.degree;
           courseController.text = state.undergraduateDetails.course;
-          batchController.text = state.undergraduateDetails.batch;
+          batchController.text = state.undergraduateDetails.batch.toString();
           backlogsController.text =
               state.undergraduateDetails.backlogs.toString();
-          currentCgpaController.text = state.undergraduateDetails.currentCgpa;
+          currentCgpaController.text =
+              state.undergraduateDetails.currentCgpa.toString();
           previousUniversity = universityController.text.trim();
           previousUniversityId = universityIdController.text.trim();
           previousUniversityEmail = universityEmailController.text.trim();
@@ -115,8 +116,10 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
             previousCurrentCgpa != currentCgpaController.text.trim();
         return Card(
             elevation: 4,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(20),
                 child: Form(
                     key: formKey,
                     child: Card(
@@ -170,9 +173,9 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
                                               universityEmailController.text.trim(),
                                           degree: degreeController.text.trim(),
                                           course: courseController.text.trim(),
-                                          batch: batchController.text.trim(),
+                                          batch: int.parse(batchController.text.trim()),
                                           backlogs: int.parse(backlogsController.text.trim()),
-                                          currentCgpa: currentCgpaController.text.trim())))
+                                          currentCgpa: double.parse(currentCgpaController.text.trim()))))
                                   : null;
                             },
                             onUndo: () {
@@ -270,230 +273,6 @@ class _UndergraduateDetailsCardState extends State<UndergraduateDetailsCard> {
                                           widget.onEdited(isEdited);
                                         },
                                       )),
-                            //             Padding(
-                            //               padding: const EdgeInsets.symmetric(
-                            //                   vertical: 8.0),
-                            //               child: TextFormField(
-                            //                 controller: universityEmailController,
-                            //                 textInputAction: TextInputAction.next,
-                            //                 validator: (email) => EmailValidator
-                            //                         .validate(email ?? "")
-                            //                     ? null
-                            //                     : "Please enter a valid Email Address",
-                            //                 decoration: InputDecoration(
-                            //                     contentPadding:
-                            //                         const EdgeInsets.all(8),
-                            //                     label: const Text(
-                            //                         "University Email Address"),
-                            //                     border: OutlineInputBorder(
-                            //                         borderRadius:
-                            //                             BorderRadius.circular(20))),
-                            //               ),
-                            //             ),
-                            //             Padding(
-                            //               padding: const EdgeInsets.symmetric(
-                            //                   vertical: 8.0),
-                            //               child: Row(
-                            //                 mainAxisSize: MainAxisSize.min,
-                            //                 children: [
-                            //                   Flexible(
-                            //                     flex: 7,
-                            //                     child: TextFormField(
-                            //                       controller: universityController,
-                            //                       textInputAction:
-                            //                           TextInputAction.next,
-                            //                       keyboardType:
-                            //                           TextInputType.streetAddress,
-                            //                       validator: (addressLine1) =>
-                            //                           addressLine1 == null ||
-                            //                                   addressLine1.length <
-                            //                                       3
-                            //                               ? "Please enter a valid Address"
-                            //                               : null,
-                            //                       decoration: InputDecoration(
-                            //                           contentPadding:
-                            //                               const EdgeInsets.all(8),
-                            //                           label: const Text(
-                            //                               "University Name"),
-                            //                           border: OutlineInputBorder(
-                            //                               borderRadius:
-                            //                                   BorderRadius.circular(
-                            //                                       20))),
-                            //                     ),
-                            //                   ),
-                            //                   const Spacer(),
-                            //                   Flexible(
-                            //                     flex: 7,
-                            //                     child: TextFormField(
-                            //                       controller:
-                            //                           universityIdController,
-                            //                       textInputAction:
-                            //                           TextInputAction.next,
-                            //                       keyboardType:
-                            //                           TextInputType.streetAddress,
-                            //                       decoration: InputDecoration(
-                            //                           contentPadding:
-                            //                               const EdgeInsets.all(8),
-                            //                           label:
-                            //                               const Text("Student UID"),
-                            //                           border: OutlineInputBorder(
-                            //                               borderRadius:
-                            //                                   BorderRadius.circular(
-                            //                                       20))),
-                            //                     ),
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ),
-                            //             Padding(
-                            //               padding: const EdgeInsets.symmetric(
-                            //                   vertical: 8.0),
-                            //               child: Row(
-                            //                 mainAxisSize: MainAxisSize.min,
-                            //                 children: [
-                            //                   Flexible(
-                            //                     flex: 7,
-                            //                     child: TextFormField(
-                            //                       controller: batchController,
-                            //                       textInputAction:
-                            //                           TextInputAction.next,
-                            //                       validator: (state) => state ==
-                            //                                   null ||
-                            //                               state.length < 3 ||
-                            //                               state.contains(
-                            //                                   RegExp(r'[0-9]'))
-                            //                           ? "Please enter a valid State"
-                            //                           : null,
-                            //                       decoration: InputDecoration(
-                            //                           contentPadding:
-                            //                               const EdgeInsets.all(8),
-                            //                           label: const Text("Batch"),
-                            //                           border: OutlineInputBorder(
-                            //                               borderRadius:
-                            //                                   BorderRadius.circular(
-                            //                                       20))),
-                            //                     ),
-                            //                   ),
-                            //                   const Spacer(),
-                            //                   Flexible(
-                            //                     flex: 7,
-                            //                     child: TextFormField(
-                            //                       controller: currentCgpaController,
-                            //                       textInputAction:
-                            //                           TextInputAction.next,
-                            //                       validator: (city) => city ==
-                            //                                   null ||
-                            //                               city.length < 3 ||
-                            //                               city.contains(
-                            //                                   RegExp(r'[0-9]'))
-                            //                           ? "Please enter a valid City Name"
-                            //                           : null,
-                            //                       decoration: InputDecoration(
-                            //                           contentPadding:
-                            //                               const EdgeInsets.all(8),
-                            //                           label: const Text(
-                            //                               "CGPA (eg. 8.0)"),
-                            //                           border: OutlineInputBorder(
-                            //                               borderRadius:
-                            //                                   BorderRadius.circular(
-                            //                                       20))),
-                            //                     ),
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ),
-                            //             Padding(
-                            //               padding: const EdgeInsets.symmetric(
-                            //                   vertical: 8.0),
-                            //               child: Row(
-                            //                 mainAxisSize: MainAxisSize.min,
-                            //                 children: [
-                            //                   Flexible(
-                            //                     flex: 7,
-                            //                     child: TextFormField(
-                            //                       controller: degreeController,
-                            //                       textInputAction:
-                            //                           TextInputAction.next,
-                            //                       validator: (state) => state ==
-                            //                                   null ||
-                            //                               state.length < 3 ||
-                            //                               state.contains(
-                            //                                   RegExp(r'[0-9]'))
-                            //                           ? "Please enter a valid State"
-                            //                           : null,
-                            //                       decoration: InputDecoration(
-                            //                           contentPadding:
-                            //                               const EdgeInsets.all(8),
-                            //                           label: const Text(
-                            //                               "Degree (Eg. BE,BTech)"),
-                            //                           border: OutlineInputBorder(
-                            //                               borderRadius:
-                            //                                   BorderRadius.circular(
-                            //                                       20))),
-                            //                     ),
-                            //                   ),
-                            //                   const Spacer(),
-                            //                   Flexible(
-                            //                     flex: 7,
-                            //                     child: TextFormField(
-                            //                       controller: courseController,
-                            //                       textInputAction:
-                            //                           TextInputAction.next,
-                            //                       validator: (city) => city ==
-                            //                                   null ||
-                            //                               city.length < 3 ||
-                            //                               city.contains(
-                            //                                   RegExp(r'[0-9]'))
-                            //                           ? "Please enter a valid City Name"
-                            //                           : null,
-                            //                       decoration: InputDecoration(
-                            //                           contentPadding:
-                            //                               const EdgeInsets.all(8),
-                            //                           label: const Text("Course"),
-                            //                           border: OutlineInputBorder(
-                            //                               borderRadius:
-                            //                                   BorderRadius.circular(
-                            //                                       20))),
-                            //                     ),
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ),
-                            //             Padding(
-                            //               padding: const EdgeInsets.symmetric(
-                            //                   vertical: 8.0),
-                            //               child: Row(
-                            //                 mainAxisSize: MainAxisSize.min,
-                            //                 children: [
-                            //                   Flexible(
-                            //                     flex: 7,
-                            //                     child: TextFormField(
-                            //                       controller: backlogsController,
-                            //                       textInputAction:
-                            //                           TextInputAction.next,
-                            //                       validator: (state) => state ==
-                            //                                   null ||
-                            //                               state.length < 3 ||
-                            //                               state.contains(
-                            //                                   RegExp(r'[0-9]'))
-                            //                           ? "Please enter a valid State"
-                            //                           : null,
-                            //                       decoration: InputDecoration(
-                            //                           contentPadding:
-                            //                               const EdgeInsets.all(8),
-                            //                           label: const Text("backlogs"),
-                            //                           border: OutlineInputBorder(
-                            //                               borderRadius:
-                            //                                   BorderRadius.circular(
-                            //                                       20))),
-                            //                     ),
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            // ),
                           ]),
                     ))));
       },

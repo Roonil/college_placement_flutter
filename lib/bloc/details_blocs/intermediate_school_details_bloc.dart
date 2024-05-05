@@ -40,7 +40,8 @@ class IntermediateSchoolDetailsBloc
             .then((_) => emit(FetchedIntermediateSchoolDetailsState(
                 intermediateSchoolDetails: IntermediateSchoolDetails(
                     board: jsonBodyData['hsc_board'] ?? "",
-                    percentageScore: jsonBodyData['hsc_result'] ?? 0,
+                    percentageScore: double.parse(
+                        (jsonBodyData['hsc_result'] ?? 0).toString()),
                     schoolCity: jsonBodyData['hsc_city'] ?? "",
                     schoolName: jsonBodyData['hsc_school_name'] ?? ""),
                 isLoading: false,
@@ -88,7 +89,7 @@ class IntermediateSchoolDetailsBloc
                 authError: null)));
       } else {
         emit(const IntermediateSchoolDetailsUpdateFailedState(
-            isLoading: false, authError: HttpException("Fetching Failed!")));
+            isLoading: false, authError: HttpException("Updating Failed!")));
       }
     } catch (_) {
       emit(const IntermediateSchoolDetailsUpdateFailedState(

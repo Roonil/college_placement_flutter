@@ -40,10 +40,11 @@ class UndergraduateDetailsBloc
             .then((_) => emit(FetchedUndergraduateDetailsState(
                 undergraduateDetails: UndergraduateDetails(
                     backlogs: jsonBodyData['number_of_backlogs'] ?? 0,
-                    batch: jsonBodyData['batch'].toString(),
+                    batch: jsonBodyData['batch'] ?? 2020,
                     course: jsonBodyData['course'] ?? "",
                     degree: jsonBodyData['stream'] ?? "",
-                    currentCgpa: jsonBodyData['current_cgpa'].toString(),
+                    currentCgpa: double.parse(
+                        (jsonBodyData['current_cgpa'] ?? 0).toString()),
                     university: "Chandigarh University",
                     universityEmail: jsonBodyData['university_email'] ?? "",
                     universityID: jsonBodyData['uid'] ?? ""),
@@ -67,7 +68,7 @@ class UndergraduateDetailsBloc
 
     final body = <String, dynamic>{};
 
-    body['batch'] = event.undergraduateDetails.batch;
+    body['batch'] = event.undergraduateDetails.batch.toString();
     body['stream'] = event.undergraduateDetails.degree;
     body['course'] = event.undergraduateDetails.course;
     body['current_cgpa'] = event.undergraduateDetails.currentCgpa.toString();
@@ -96,7 +97,7 @@ class UndergraduateDetailsBloc
                 authError: null)));
       } else {
         emit(const UndergraduateDetailsUpdateFailedState(
-            isLoading: false, authError: HttpException("Fetching Failed!")));
+            isLoading: false, authError: HttpException("Updating Failed!")));
       }
     } catch (_) {
       emit(const UndergraduateDetailsUpdateFailedState(

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart' show MediaType;
@@ -18,7 +19,7 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
   Future<FutureOr<void>> _fetchResumes(
       FetchResumesEvent event, Emitter<ResumeState> emit) async {
     emit(const FetchingResumesState(isLoading: true, authError: null));
-    final Map<String, dynamic> resumes = {};
+    final Map<String, String> resumes = {};
 
     try {
       http.Response resp = await http
@@ -29,7 +30,7 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
           );
 
       if (resp.statusCode == 200) {
-        resumes['resume_1'] = resp.body;
+        resumes['resume1'] = "${hostName}S-${event.studentID}-resume1.pdf";
       }
 
       resp = await http
@@ -40,7 +41,7 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
           );
 
       if (resp.statusCode == 200) {
-        resumes['resume_2'] = resp.body;
+        resumes['resume2'] = "${hostName}S-${event.studentID}-resume2.pdf";
       }
 
       resp = await http
@@ -51,11 +52,12 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
           );
 
       if (resp.statusCode == 200) {
-        resumes['resume_3'] = resp.body;
+        resumes['resume3'] = "${hostName}S-${event.studentID}-resume3.pdf";
       }
 
-      emit(FetchedResumesState(
-          isLoading: false, resumes: resumes, authError: null));
+      await Future.delayed(const Duration(milliseconds: 500)).then((value) =>
+          emit(FetchedResumesState(
+              isLoading: false, resumes: resumes, authError: null)));
     } catch (_) {
       emit(const ResumesFetchFailedState(
           isLoading: false, authError: HttpException("An Error occured!")));
@@ -69,7 +71,7 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
       final uri = Uri.parse("$patchDetailsURL?type=id&id=${event.studentID}");
       var request = http.MultipartRequest('PATCH', uri);
       final resumeFile = http.MultipartFile.fromBytes(
-          event.resumeName, event.resumeBytes!,
+          'resume_${event.resumeName.characters.last}', event.resumeBytes!,
           contentType: MediaType.parse('application/pdf'),
           filename: '${event.resumeName}.pdf');
 
@@ -83,13 +85,15 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
           );
 
       if (resp.statusCode == 200) {
-        event.resumes[event.resumeName] = event.resumeBytes!;
+        event.resumes[event.resumeName] =
+            "${hostName}S-${event.studentID}-${event.resumeName}.pdf";
         await Future.delayed(const Duration(seconds: 0, milliseconds: 500))
             .then((_) => emit(UpdatedResumeState(
                 isLoading: false, resumes: event.resumes, authError: null)));
       } else {
         emit(const ResumeUpdateFailedState(
-            isLoading: false, authError: HttpException("Fetching Failed!")));
+            isLoading: false,
+            authError: HttpException("Resume Updation Failed!")));
       }
     } catch (_) {
       emit(const ResumeUpdateFailedState(

@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
-import '../../../bloc/details_blocs/personal_details_bloc.dart';
-import '../../../bloc/details_blocs/personal_details_events.dart';
-import '../../../bloc/login_bloc.dart';
-import '../../../bloc/login_bloc_states.dart';
-import '../../../models/personal_details.dart';
 
 class PersonalDetailsInputs extends StatelessWidget {
   final TextEditingController firstNameController,
@@ -31,7 +24,6 @@ class PersonalDetailsInputs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color requiredBorderColor = Theme.of(context).colorScheme.tertiary;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -57,12 +49,6 @@ class PersonalDetailsInputs extends StatelessWidget {
                       errorMaxLines: 4,
                       contentPadding: const EdgeInsets.all(8),
                       label: const Text("First Name"),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: requiredBorderColor,
-                          ),
-                          borderRadius: BorderRadius.circular(20)),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20))),
                 ),
@@ -168,25 +154,7 @@ class PersonalDetailsInputs extends StatelessWidget {
             enabled: inputsEnabled,
             controller: nationalityController,
             onChanged: onChanged,
-            onFieldSubmitted: (value) => formKey.currentState!.validate() &&
-                    isEdited
-                ? BlocProvider.of<PersonalDetailsBloc>(context).add(
-                    UpdatePersonalDetailsEvent(
-                        token: (BlocProvider.of<LoginBloc>(context)
-                                .state as LoggedInState)
-                            .student
-                            .token,
-                        studentID: (BlocProvider.of<LoginBloc>(context).state
-                                as LoggedInState)
-                            .student
-                            .id,
-                        personalDetails: PersonalDetails(
-                            dateOfBirth: dateOfBirthController.text.trim(),
-                            firstName: firstNameController.text.trim(),
-                            lastName: lastNameController.text.trim(),
-                            nationality: nationalityController.text.trim())))
-                : null,
-            textInputAction: TextInputAction.go,
+            textInputAction: TextInputAction.next,
             validator: (nationality) => nationality == null ||
                     nationality.contains(RegExp(r'[0-9]')) ||
                     nationality.length < 3

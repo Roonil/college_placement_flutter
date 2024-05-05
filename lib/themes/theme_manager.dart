@@ -51,7 +51,6 @@ class ThemeManager {
       chipTheme: baseThemeData.chipTheme.copyWith(
         side: const BorderSide(color: Colors.transparent),
         backgroundColor: secondaryColor,
-        selectedColor: secondaryColor,
         selectedShadowColor: primaryColor,
         labelStyle: const TextStyle(color: Colors.white),
         iconTheme:

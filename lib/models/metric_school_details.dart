@@ -1,6 +1,6 @@
 class MetricSchoolDetails {
-  final String schoolName, schoolCity, percentageScore, board;
-
+  final String schoolName, schoolCity, board;
+  final double percentageScore;
   MetricSchoolDetails({
     required this.schoolName,
     required this.schoolCity,

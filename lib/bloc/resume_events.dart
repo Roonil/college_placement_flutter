@@ -18,7 +18,7 @@ class FetchResumesEvent implements ResumeEvent {
 class UpdateResumeEvent implements ResumeEvent {
   final int studentID;
   final String token, resumeName;
-  final Map<String, dynamic> resumes;
+  final Map<String, String> resumes;
   final Uint8List? resumeBytes;
   const UpdateResumeEvent(
       {required this.studentID,

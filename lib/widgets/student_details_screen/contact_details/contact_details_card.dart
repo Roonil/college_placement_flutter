@@ -89,9 +89,11 @@ class _ContactDetailsCardState extends State<ContactDetailsCard> {
                 previousAddressLine1 != addressLine1Controller.text.trim();
 
         return Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           elevation: 4,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(20),
             child: Form(
               key: formKey,
               child: Card(

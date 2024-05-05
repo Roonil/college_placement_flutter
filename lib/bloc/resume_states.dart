@@ -28,7 +28,7 @@ class ResumesFetchFailedState extends InitialState {
 
 @immutable
 class FetchedResumesState extends InitialState {
-  final Map<String, dynamic> resumes;
+  final Map<String, String> resumes;
   const FetchedResumesState(
       {required super.isLoading,
       required super.authError,
@@ -49,7 +49,7 @@ class ResumeUpdateFailedState extends InitialState {
 
 @immutable
 class UpdatedResumeState extends InitialState {
-  final Map<String, dynamic> resumes;
+  final Map<String, String> resumes;
   const UpdatedResumeState(
       {required super.isLoading,
       required this.resumes,

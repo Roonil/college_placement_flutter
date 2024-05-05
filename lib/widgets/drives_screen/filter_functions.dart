@@ -1,8 +1,78 @@
+import 'package:intl/intl.dart';
+
 import '../../dummy_data/filter_actions.dart';
 import '../../models/company.dart';
 
 class FilterFunctions {
   static final Set<FilterType> appliedFilters = {};
+  static final Set<String> searchFields = {"Name"};
+  static String sortByField = "Name";
+  static int sortValue = 1;
+  static bool showExpired = true;
+
+  static Set<Company> searchCompanies(
+      {required Set<Company> companies, required String searchString}) {
+    final Set<Company> searchedCompanies = {};
+
+    for (Company company in companies) {
+      if (FilterFunctions.searchFields.contains('Name') &&
+          company.name.toLowerCase().contains(searchString.toLowerCase())) {
+        searchedCompanies.add(company);
+      } else if (FilterFunctions.searchFields.contains('Description') &&
+          company.details.toLowerCase().contains(searchString.toLowerCase())) {
+        searchedCompanies.add(company);
+      } else if (FilterFunctions.searchFields.contains('Roles')) {
+        for (String role in company.roles) {
+          if (role.toLowerCase().contains(searchString.toLowerCase())) {
+            searchedCompanies.add(company);
+          }
+        }
+      }
+    }
+
+    return sortCompanies(
+        companies: searchedCompanies, sortCriteria: sortByField);
+  }
+
+  static Set<Company> toggleExpire(Set<Company> companies) {
+    return showExpired
+        ? companies
+        : companies.where((company) => company.timeLeft >= 0).toSet();
+  }
+
+  static Set<Company> sortCompanies(
+      {required Set<Company> companies, required String sortCriteria}) {
+    final List<Company> companiesList = companies.toList();
+
+    if (sortCriteria != sortByField) {
+      sortByField = sortCriteria;
+      sortValue = 1;
+    }
+
+    if (sortCriteria == 'Name') {
+      companiesList
+          .sort((Company a, Company b) => sortValue * a.name.compareTo(b.name));
+    } else if (sortCriteria == "Registrations") {
+      companiesList.sort((Company a, Company b) =>
+          sortValue * a.numRegistrations.compareTo(b.numRegistrations));
+    } else if (sortCriteria == "Date of Drive") {
+      companiesList.sort((Company a, Company b) =>
+          sortValue *
+          DateFormat("dd/MM/yyyy")
+              .parse(a.dateOfDrive)
+              .compareTo(DateFormat("dd/MM/yyyy").parse(b.dateOfDrive)));
+    } else if (sortCriteria == "Time Left") {
+      companiesList.sort((Company a, Company b) =>
+          sortValue * a.timeLeft.compareTo(b.timeLeft));
+    } else if (sortCriteria == "Date of Creation") {
+      companiesList.sort((Company a, Company b) =>
+          sortValue * b.startedAtTime.compareTo(a.startedAtTime));
+    }
+
+    final Set<Company> sortedCompanies = companiesList.toSet();
+
+    return toggleExpire(sortedCompanies);
+  }
 
   static Set<Company> applyFilter(
       {required Set<Company> initialCompanies,
@@ -97,7 +167,8 @@ class FilterFunctions {
             filterType: appliedFilter);
       }
 
-      return newlyFilteredCompanies;
+      return sortCompanies(
+          companies: newlyFilteredCompanies, sortCriteria: sortByField);
     }
   }
 }

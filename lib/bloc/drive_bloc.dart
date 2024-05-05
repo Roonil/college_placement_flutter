@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../../constants.dart';
 import '../models/company.dart';
 import '../dummy_data/companies.dart' show companies;
+import '../widgets/drives_screen/filter_functions.dart';
 import 'drive_events.dart';
 import 'drive_states.dart';
 
@@ -52,22 +53,26 @@ class DriveBloc extends Bloc<DriveEvent, DriveState> {
         jsonBodyData = jsonBody['drives'];
         companies.clear();
 
+        Set<Company> fetchedCompanies = {};
+
         for (var drive in jsonBodyData) {
           final dateOfDrive = convertToFlutterDateTime(drive['date_of_drive']);
           final currentDate = DateTime.now();
-          companies.add(Company(
+          fetchedCompanies.add(Company(
               name: drive['company_name'],
               companyID: drive['id'] ?? 0,
               driveType: drive['type_of_drive'],
-              timeLeft:
-                  "${convertToFlutterDateTime(drive['closes_at']).difference(currentDate).inDays}d",
+              timeLeft: convertToFlutterDateTime(drive['closes_at'])
+                  .difference(currentDate)
+                  .inDays,
               imageURL: 'imageURL',
-              startedAtTime:
-                  "${currentDate.difference(convertToFlutterDateTime(drive['created_at'])).inDays}d",
+              startedAtTime: currentDate
+                  .difference(convertToFlutterDateTime(drive['created_at']))
+                  .inDays,
               details: drive['company_about'],
               eligibilityCriteria: drive['other_eligibility_criteria'],
               dateOfDrive:
-                  "${dateOfDrive.day}/${dateOfDrive.month}/${dateOfDrive.year}",
+                  "${dateOfDrive.day.toString().padLeft(2, '0')}/${dateOfDrive.month.toString().padLeft(2, '0')}/${dateOfDrive.year}",
               jobProfile: drive['job_profile'],
               location: drive['job_location'],
               package: drive['pay_package'],
@@ -78,17 +83,24 @@ class DriveBloc extends Bloc<DriveEvent, DriveState> {
                       .split(RegExp(r"(?<=[a-z])(?=[A-Z])"))
                       .fold(
                           "",
-                          (previousValue, element) =>
-                              "$previousValue $element"))
+                          (previousValue, element) => previousValue.isEmpty
+                              ? element
+                              : "$previousValue $element"))
                   .toList(),
               process: [drive['placement_process']],
               numRegistrations: drive['_count']['participants'],
               hasRegistered:
                   registeredCompaniesIDs.contains(drive['id'] ?? 0)));
         }
+
+        companies.addAll(
+          FilterFunctions.sortCompanies(
+              companies: fetchedCompanies,
+              sortCriteria: FilterFunctions.sortByField),
+        );
         await Future.delayed(const Duration(seconds: 0, milliseconds: 500))
-            .then((_) => emit(FetchedDrivesState(
-                drives: companies, isLoading: false, authError: null)));
+            .then((_) => emit(
+                const FetchedDrivesState(isLoading: false, authError: null)));
       } else {
         emit(const DrivesFetchFailedState(
             isLoading: false, authError: HttpException("Fetching Failed!")));

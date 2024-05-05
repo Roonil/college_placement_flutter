@@ -1,13 +1,7 @@
 class UndergraduateDetails {
-  final String university,
-      universityID,
-      universityEmail,
-      degree,
-      course,
-      currentCgpa,
-      batch;
-  final int backlogs;
-
+  final String university, universityID, universityEmail, degree, course;
+  final int backlogs, batch;
+  final double currentCgpa;
   UndergraduateDetails(
       {required this.university,
       required this.universityID,

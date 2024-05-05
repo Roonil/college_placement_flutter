@@ -82,40 +82,52 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                     Text('Successfully Registered for ${widget.driveName}!')));
           }
         },
+        buildWhen: (previous, current) => current is RegisteringDriveState,
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
               title: const Text("Verify Details"),
               actions: [
-                TextButton(
-                    style: TextButton.styleFrom(
-                        disabledBackgroundColor: Colors.grey.withAlpha(150)),
-                    onPressed: personalDetailsEdited ||
-                            contactDetailsEdited ||
-                            undergraduateDetailsEdited ||
-                            intermediateDetailsEdited ||
-                            matricDetailsEdited
-                        ? null
-                        : () => BlocProvider.of<RegisterBloc>(context).add(
-                            ApplyToDriveEvent(
-                                studentID: (BlocProvider.of<LoginBloc>(context)
-                                        .state as LoggedInState)
-                                    .student
-                                    .id,
-                                token: (BlocProvider.of<LoginBloc>(context)
-                                        .state as LoggedInState)
-                                    .student
-                                    .token,
-                                driveID: widget.driveID,
-                                selectedResume: widget.selectedResumeIdx,
-                                selectedRole: widget.selectedRole)),
-                    child: Text(
-                      "Continue",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: Colors.white),
-                    ))
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: state is RegisteringDriveState
+                      ? const SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator())
+                      : TextButton(
+                          style: TextButton.styleFrom(
+                              disabledBackgroundColor:
+                                  Colors.grey.withAlpha(150)),
+                          onPressed: personalDetailsEdited ||
+                                  contactDetailsEdited ||
+                                  undergraduateDetailsEdited ||
+                                  intermediateDetailsEdited ||
+                                  matricDetailsEdited
+                              ? null
+                              : () => BlocProvider.of<RegisterBloc>(context)
+                                  .add(ApplyToDriveEvent(
+                                      studentID:
+                                          (BlocProvider.of<LoginBloc>(context)
+                                                  .state as LoggedInState)
+                                              .student
+                                              .id,
+                                      token:
+                                          (BlocProvider.of<LoginBloc>(context)
+                                                  .state as LoggedInState)
+                                              .student
+                                              .token,
+                                      driveID: widget.driveID,
+                                      selectedResume: widget.selectedResumeIdx,
+                                      selectedRole: widget.selectedRole)),
+                          child: Text(
+                            "Apply",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(color: Colors.white),
+                          )),
+                )
               ],
             ),
             body: Padding(

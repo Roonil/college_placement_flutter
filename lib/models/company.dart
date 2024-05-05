@@ -1,8 +1,6 @@
 class Company {
   final String name,
       driveType,
-      timeLeft,
-      startedAtTime,
       details,
       eligibilityCriteria,
       dateOfDrive,
@@ -13,7 +11,7 @@ class Company {
 
   final String? imageURL;
   final List<String> roles, process;
-  final int numRegistrations, companyID;
+  final int numRegistrations, companyID, timeLeft, startedAtTime;
   final bool hasRegistered;
 
   Company(
@@ -39,7 +37,9 @@ class Company {
   bool operator ==(Object other) {
     return other is Company &&
         other.runtimeType == runtimeType &&
-        other.companyID == companyID;
+        other.companyID == companyID &&
+        other.hasRegistered == hasRegistered &&
+        other.numRegistrations == numRegistrations;
   }
 
   @override

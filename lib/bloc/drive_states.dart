@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart' show immutable;
 
-import '../models/company.dart';
-
 @immutable
 abstract class DriveState {
   final bool isLoading;
@@ -29,9 +27,6 @@ class DrivesFetchFailedState extends InitialState {
 
 @immutable
 class FetchedDrivesState extends InitialState {
-  final Set<Company> drives;
   const FetchedDrivesState(
-      {required this.drives,
-      required super.isLoading,
-      required super.authError});
+      {required super.isLoading, required super.authError});
 }
