@@ -31,13 +31,8 @@ class FilterFunctions {
     }
 
     return sortCompanies(
-        companies: searchedCompanies, sortCriteria: sortByField);
-  }
-
-  static Set<Company> toggleExpire(Set<Company> companies) {
-    return showExpired
-        ? companies
-        : companies.where((company) => company.timeLeft >= 0).toSet();
+        companies: searchedCompanies,
+        sortCriteria: FilterFunctions.sortByField);
   }
 
   static Set<Company> sortCompanies(
@@ -71,7 +66,7 @@ class FilterFunctions {
 
     final Set<Company> sortedCompanies = companiesList.toSet();
 
-    return toggleExpire(sortedCompanies);
+    return sortedCompanies;
   }
 
   static Set<Company> applyFilter(
@@ -168,7 +163,8 @@ class FilterFunctions {
       }
 
       return sortCompanies(
-          companies: newlyFilteredCompanies, sortCriteria: sortByField);
+          companies: newlyFilteredCompanies,
+          sortCriteria: FilterFunctions.sortByField);
     }
   }
 }

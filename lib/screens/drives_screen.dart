@@ -9,15 +9,14 @@ import '../bloc/login_bloc.dart';
 import '../bloc/login_bloc_states.dart';
 import '../bloc/login_events.dart';
 import '../dummy_data/companies.dart';
-import '../dummy_data/filter_actions.dart';
-import '../dummy_data/filters.dart';
+
 import '../main.dart';
 import '../models/company.dart';
 import '../widgets/drives_screen/drive_tile.dart';
-import '../widgets/drives_screen/filter_builder.dart';
+
 import '../widgets/drives_screen/filter_functions.dart';
-import '../widgets/drives_screen/search_criteria_builder.dart';
-import '../widgets/drives_screen/sort_criteria_builder.dart';
+import '../widgets/drives_screen/sort_and_filter.dart';
+
 import 'login_screen.dart';
 
 class DrivesScreen extends StatefulWidget {
@@ -39,12 +38,6 @@ class _DrivesScreenState extends State<DrivesScreen> {
     final SortAndFilter sortAndFilter = SortAndFilter(
         onChanged: (value) => setState(() {
               FilterFunctions.showExpired = !FilterFunctions.showExpired;
-
-              filteredCompanies = FilterFunctions.sortCompanies(
-                  companies: previouslyFilteredCompanies,
-                  sortCriteria: FilterFunctions.sortByField);
-
-              // filteredCompanies = previouslyFilteredCompanies;
             }),
         applyFilterCallBack: (filterType) {
           setState(() {
@@ -147,6 +140,13 @@ class _DrivesScreenState extends State<DrivesScreen> {
                 ? Drawer(child: sortAndFilter)
                 : null,
             body: Builder(builder: (context) {
+              // print(filteredCompanies.first.name);
+              // print(filteredCompanies
+              //     .where((company) => company.timeLeft < 0)
+              //     .toSet()
+              //     .first
+              //     .name);
+
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -281,7 +281,10 @@ class _DrivesScreenState extends State<DrivesScreen> {
                     ),
                     state is FetchingDrivesState
                         ? const Center(child: CircularProgressIndicator())
-                        : filteredCompanies.isEmpty
+                        : filteredCompanies.isEmpty ||
+                                (!FilterFunctions.showExpired &&
+                                    filteredCompanies.every(
+                                        (company) => company.timeLeft < 0))
                             ? Text(
                                 "No Drives Found!",
                                 style: Theme.of(context).textTheme.titleMedium,
@@ -290,13 +293,26 @@ class _DrivesScreenState extends State<DrivesScreen> {
                                 child: ListView.separated(
                                   shrinkWrap: true,
                                   separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                    height: 20,
-                                  ),
+                                      !FilterFunctions.showExpired &&
+                                              filteredCompanies
+                                                      .elementAt(index)
+                                                      .timeLeft <
+                                                  0
+                                          ? Container()
+                                          : const SizedBox(
+                                              height: 20,
+                                            ),
                                   itemCount: filteredCompanies.length,
-                                  itemBuilder: (context, index) => DriveTile(
-                                      company:
-                                          filteredCompanies.elementAt(index)),
+                                  itemBuilder: (context, index) =>
+                                      !FilterFunctions.showExpired &&
+                                              filteredCompanies
+                                                      .elementAt(index)
+                                                      .timeLeft <
+                                                  0
+                                          ? Container()
+                                          : DriveTile(
+                                              company: filteredCompanies
+                                                  .elementAt(index)),
                                 ),
                               ),
                   ],
@@ -305,65 +321,5 @@ class _DrivesScreenState extends State<DrivesScreen> {
             }),
           );
         });
-  }
-}
-
-class SortAndFilter extends StatefulWidget {
-  const SortAndFilter(
-      {super.key,
-      required this.applyFilterCallBack,
-      required this.criterias,
-      required this.onChanged});
-  final Function(FilterType) applyFilterCallBack;
-  final Map<String, Function(bool)> criterias;
-  final Function(bool) onChanged;
-  @override
-  State<SortAndFilter> createState() => _SortAndFilterState();
-}
-
-class _SortAndFilterState extends State<SortAndFilter> {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FilterBuilder(
-                  filters: filters,
-                  applyFilterCallBack: widget.applyFilterCallBack),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Divider(),
-              ),
-              const SearchCriteriaBuilder(),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Divider(),
-              ),
-              SortCriteriaBuilder(criterias: widget.criterias),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Divider(),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Show Expired Drives"),
-                    Switch(
-                        value: FilterFunctions.showExpired,
-                        onChanged: (value) => setState(() {
-                              widget.onChanged(value);
-                            })),
-                  ],
-                ),
-              )
-            ],
-          )),
-    );
   }
 }
